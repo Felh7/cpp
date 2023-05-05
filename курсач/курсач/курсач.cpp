@@ -44,7 +44,7 @@ struct list* head;
 struct list* tail;
 
 unsigned short int count_of_dynamic_items = 0;
-void dynamic_add(struct_student Data) {
+/*void dynamic_add(struct_student Data) {
 
     struct list* newitem = new list();
     newitem->Data = Data;
@@ -60,7 +60,7 @@ void dynamic_add(struct_student Data) {
     newitem->previous = NULL;
     head = newitem;
     count_of_dynamic_items++;
-}
+}*/
 void error_numbers(unsigned short int* n) {
     while (true) {
         cin >> *n;
@@ -146,7 +146,7 @@ void menu() {
     cout << "введите 5 для выведения данных всех студентов в файле" << endl;
 }
 
-void free_memory(list* current) {
+/*void free_memory(list* current) {
     list* buffer;
     while (current != NULL) {
         if (current->previous != NULL) {
@@ -164,7 +164,7 @@ void free_memory(list* current) {
             break;
         }
     }
-}
+}*/
 
 void get_from_file(fstream* file, struct_student* stud, string b, unsigned short int *numbers_of_semester, unsigned short int* massive_of_semestersandsubjects) {
     while (true) {
@@ -291,24 +291,26 @@ void get_from_file(fstream* file, struct_student* stud, string b, unsigned short
         i++;
         j = 0;
     }
+    *numbers_of_semester=i;
     for (int i = 0; i < *numbers_of_semester; i++) {
         stud->massive_of_semestersandsubjects[i] = massive_of_semestersandsubjects[i];
     }
     stud->numbers_of_semester = *numbers_of_semester;
 
 }
-void search_with_interval(struct list** tail, unsigned short int a, unsigned short int b, unsigned short int *numbers_of_semester, unsigned short int *massive_of_semestersandsubjects) {
+void search_with_interval(struct list** tail, unsigned short int a, unsigned short int b) {
     struct list* current = *tail;
     struct list* buffer;
     int count_of_trois; 
-    unsigned short int numbers_of_subjects;
+    unsigned short int numbers_of_semester;
     int j = 0;
     unsigned short int number_of_marks;
     while (current != NULL) {
         count_of_trois = 0;
         number_of_marks = 0;
-        for (int i = 0; i < *numbers_of_semester+1; i++) {
-           while (j<massive_of_semestersandsubjects[i]) {
+        numbers_of_semester = current->Data.numbers_of_semester;
+        for (int i = 0; i < numbers_of_semester; i++) {
+           while (j<current->Data.massive_of_semestersandsubjects[i]) {
                 if (current->Data.semester[i].subject[j].mark == 3) {
                     count_of_trois++;
                 }
@@ -316,8 +318,8 @@ void search_with_interval(struct list** tail, unsigned short int a, unsigned sho
             }
            j = 0;
         }
-        for (int n = 0; n < *numbers_of_semester+1; n++) {
-            for (int k = 0; k < massive_of_semestersandsubjects[n]; k++) {
+        for (int n = 0; n < numbers_of_semester; n++) {
+            for (int k = 0; k < current->Data.massive_of_semestersandsubjects[n]; k++) {
                 number_of_marks++;
             }
         }
@@ -353,7 +355,7 @@ void search_with_interval(struct list** tail, unsigned short int a, unsigned sho
 
     }
 }
-void print_dynamic(struct list* tail, unsigned short int *numbers_of_semester, unsigned short int *massive_of_semestersandsubjects) {
+/*void print_dynamic(struct list* tail, unsigned short int* numbers_of_semester, unsigned short int* massive_of_semestersandsubjects) {
     struct list* current = tail;
     while (true) {
         cout << endl;
@@ -389,8 +391,8 @@ void print_dynamic(struct list* tail, unsigned short int *numbers_of_semester, u
         }
         else { break; }
     }
-}
-void create_dynamic_spis(fstream* file, struct struct_student* stud, string b, unsigned short int * numbers_of_semester, unsigned short int *massive_of_semestersandsubjects) {
+}*/
+/*void create_dynamic_spis(fstream* file, struct struct_student* stud, string b, unsigned short int* numbers_of_semester, unsigned short int* massive_of_semestersandsubjects) {
     while (true) {
 
         get_from_file(file, stud, b, numbers_of_semester, massive_of_semestersandsubjects);
@@ -420,7 +422,7 @@ void create_dynamic_spis(fstream* file, struct struct_student* stud, string b, u
         if (file->eof()) { break; }
         else { file->seekg(-1, fstream::cur); }
     }
-}
+}*/
 bool do_not_enter_numbers(string* str) {
     unsigned short int i = 0;
     
@@ -612,7 +614,7 @@ public:
     struct list* head;
     unsigned short int numbers_of_semester;
     unsigned short int massive_of_semestersandsubjects[9];
-    unsigned short int count_of_dynamic_items ;
+    unsigned short int count_of_dynamic_items =0;
 
     dynamic_list() { count_of_dynamic_items = 0; tail = NULL; head = NULL; }
     void dynamic_add(struct_student Data) {
@@ -632,8 +634,8 @@ public:
         this->head = newitem;
         count_of_dynamic_items++;
     }
-    void free_memory(list* current) {
-        list* current = tail;
+    void free_memory() {
+        list* current = this->tail;
         list* buffer;
         while (current != NULL) {
             if (current->previous != NULL) {
@@ -652,6 +654,44 @@ public:
             }
         }
     }
+    void print_dynamic() {
+        struct list* current = this->tail;
+        while (true) {
+            cout << endl;
+            cout << "------------------------------------------------------------------------------------------------------------------------------------------------------";
+            cout << endl << "фамилия имя отчество: " << current->Data.name << endl;
+            cout << "дата рождения: ";
+            cout << current->Data.birth_date.day << " ";
+            cout << current->Data.birth_date.month << " ";
+            cout << current->Data.birth_date.year << endl;
+            cout << "дата поступления: ";
+            cout << current->Data.admission_date.day << " ";
+            cout << current->Data.admission_date.month << " ";
+            cout << current->Data.admission_date.year << endl;
+            cout << "институт: " << current->Data.institut << endl;
+            cout << "кафедра: " << current->Data.department << endl;
+            cout << "группа: " << current->Data.group << endl;
+            cout << "зачетная книжка: " << current->Data.record_book << endl;
+            cout << "пол: " << current->Data.sex << endl;
+            unsigned short int j = 0;
+            for (int i = 0; i < current->Data.numbers_of_semester; i++) {
+                cout << endl << "семестр " << i + 1 << endl;
+                while (j < current->Data.massive_of_semestersandsubjects[i]) {
+                    cout << current->Data.semester[i].subject[j].name << "-" << current->Data.semester[i].subject[j].mark << "  ";
+                    j++;
+                }
+                cout << endl;
+                j = 0;
+            }
+            cout << "------------------------------------------------------------------------------------------------------------------------------------------------------";
+            cout << endl;
+            if (current->previous != NULL) {
+                current = current->previous;
+            }
+            else { break; }
+        }
+    }
+
     void create_dynamic_spis(fstream* file, struct struct_student* stud, string b) {
         while (true) {
 
@@ -665,6 +705,10 @@ public:
             stud->sex.clear();
             stud->record_book.clear();
             stud->department.clear();
+            for (int k = 0; k < 9; k++) {
+                stud->massive_of_semestersandsubjects[k] = '\0';
+            }
+            stud->numbers_of_semester = 0;
             while (true) {
 
                 for (j = 0; j < this->massive_of_semestersandsubjects[i]; j++) {
@@ -743,7 +787,7 @@ int main() {
             while (true) {
                 cout << "Введите номер по счету студента, данные которого вы хотите удалить: ";
                 error_numbers(&n);
-                if (n > count_of_dynamic_items) {
+                if (n > list.count_of_dynamic_items) {
                     cout << "в фалйе нет столько записей. Количество записей в файле: " << list.count_of_dynamic_items << endl << "Попробуйте снова" << endl;
                 }
                 else { break; }
@@ -793,7 +837,7 @@ int main() {
                 count_of_dynamic_items--;
             }
             current = list.tail;
-            free_memory(current);
+            list.free_memory();
             break;
         }
 
@@ -808,7 +852,7 @@ int main() {
 
             if (file.is_open()) {
                 string b;
-                create_dynamic_spis(&file, &stud, b, &list.numbers_of_semester, list.massive_of_semestersandsubjects);
+                list.create_dynamic_spis(&file, &stud, b);
             }
             else {
                 cout << "не удалось открыть файл" << endl;
@@ -836,7 +880,7 @@ int main() {
             case 0: {
                 struct list* current;
                 current = list.tail;
-                free_memory(current);
+                list.free_memory();
                 break;
             }
 
@@ -874,7 +918,7 @@ int main() {
                     cout << "Данные успешно изменены" << endl;
                 }
                 current = tail;
-                free_memory(current);
+                list.free_memory();
                 break;
             }
 
@@ -910,7 +954,7 @@ int main() {
 
                 }
                 current = list.tail;
-                free_memory(current);
+                list.free_memory();
                 break;
             }
 
@@ -935,7 +979,7 @@ int main() {
 
                 }
                 current = list.tail;
-                free_memory(current);
+                list.free_memory();
                 break;
             }
 
@@ -959,7 +1003,7 @@ int main() {
 
                 }
                 current = list.tail;
-                free_memory(current);
+                list.free_memory();
                 break;
             }
 
@@ -991,7 +1035,7 @@ int main() {
 
                 }
                 current = list.tail;
-                free_memory(current);
+                list.free_memory();
                 break;
             }
 
@@ -1016,7 +1060,7 @@ int main() {
 
                 }
                 current = list.tail;
-                free_memory(current);
+                list.free_memory();
                 break;
             }
             case 7: {
@@ -1039,14 +1083,14 @@ int main() {
 
                 }
                 current = list.tail;
-                free_memory(current);
-                
+                list.free_memory();
+
             }
                   break;
             default: {
                 cout << "такой команды нет" << endl;
                 struct list* current = list.tail;
-                free_memory(current);
+                list.free_memory();
                 break;
             }
 
@@ -1085,20 +1129,18 @@ int main() {
                 }
                 else { break; }
             }
-            search_with_interval(&list.tail, interval_start, interval_end, &numbers_of_semester, massive_of_semestersandsubjects);
+            search_with_interval(&list.tail, interval_start, interval_end);
             struct list* current = list.tail;
-            struct list* buffer;
-
-            if (tail == NULL) {
+            if (list.tail == NULL) {
                 cout << "студентов, удовлетворяющих условию нет" << endl;
-                current = tail;
-                free_memory(current);
+                current = list.tail;
+                list.free_memory();
                 break;
             }
             else {
-                print_dynamic(current, &numbers_of_semester, massive_of_semestersandsubjects);       
-                current = tail;
-                free_memory(current);
+                list.print_dynamic();
+                current = list.tail;
+                list.free_memory();
                 break;
             }
         }
@@ -1123,10 +1165,9 @@ int main() {
             file.close();
             struct list* current = list.tail;
             
-            print_dynamic(current, &current->Data.numbers_of_semester, current->Data.massive_of_semestersandsubjects);
-               
-            current = list.tail;
-            free_memory(current);
+            list.print_dynamic();
+
+            list.free_memory();
             break;
         }
 
