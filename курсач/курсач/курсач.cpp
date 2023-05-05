@@ -251,19 +251,23 @@ void get_from_file(fstream* file, struct_student* stud, string b, unsigned short
     unsigned short int i = 0;
     unsigned short int j = 0;
    
-    while (b != "\n") {
-       
+    while (b!="\n") {
         bool flag = true;
         while (flag == true) {
             while (true) {
                 b = file->get();
+                if (b == "\r") {
+                    b = file->get();
+                    flag = false;
+                    break;
+                }
                 if (b == "\n") {
                     flag = false;
                     break;
                 }
                 if (b == "{") {
                     flag = false;
-                    *file >> *numbers_of_semester;
+                    file->get();
                     file->get();
                     break;
                 }
@@ -281,7 +285,8 @@ void get_from_file(fstream* file, struct_student* stud, string b, unsigned short
                     }
                     *file >> stud->semester[i].subject[j].mark;
                    
-                    file->get();
+                    b = file->get();
+                    
                     j++;
 
                 }
@@ -290,6 +295,7 @@ void get_from_file(fstream* file, struct_student* stud, string b, unsigned short
         massive_of_semestersandsubjects[i] = j;
         i++;
         j = 0;
+        
     }
     *numbers_of_semester=i;
     for (int i = 0; i < *numbers_of_semester; i++) {
@@ -301,7 +307,11 @@ void get_from_file(fstream* file, struct_student* stud, string b, unsigned short
 void search_with_interval(struct list** tail, unsigned short int a, unsigned short int b) {
     struct list* current = *tail;
     struct list* buffer;
+<<<<<<< HEAD
     int count_of_trois; 
+=======
+    float count_of_trois;
+>>>>>>> работает 5 4 и 1 кейс
     unsigned short int numbers_of_semester;
     int j = 0;
     unsigned short int number_of_marks;
@@ -323,11 +333,12 @@ void search_with_interval(struct list** tail, unsigned short int a, unsigned sho
                 number_of_marks++;
             }
         }
-        float percent = count_of_trois % number_of_marks;
+        float percent = count_of_trois / number_of_marks;
         if ((percent > 0.25) or (current->Data.birth_date.year < a) or (current->Data.birth_date.year > b)) {
             if (current->previous != NULL) {
                 buffer = current->previous;
                 buffer->next = current->next;
+                buffer->next->previous = buffer;
                 delete current;
                 current = buffer;
                 if (current->next == NULL) {
