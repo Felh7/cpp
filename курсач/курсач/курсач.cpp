@@ -291,6 +291,10 @@ void get_from_file(fstream* file, struct_student* stud, string b, unsigned short
         i++;
         j = 0;
     }
+    for (int i = 0; i < *numbers_of_semester; i++) {
+        stud->massive_of_semestersandsubjects[i] = massive_of_semestersandsubjects[i];
+    }
+    stud->numbers_of_semester = *numbers_of_semester;
 
 }
 void search_with_interval(struct list** tail, unsigned short int a, unsigned short int b, unsigned short int *numbers_of_semester, unsigned short int *massive_of_semestersandsubjects) {
@@ -679,7 +683,6 @@ public:
     }
 
 
-
 };
 int main() {
     SetConsoleCP(1251);
@@ -746,7 +749,7 @@ int main() {
                 else { break; }
             }
             cout << endl;
-            struct list* current = tail;
+            struct list* current = list.tail;
             for (int i = 0; i < n - 1; i++) {
                 current = current->previous;
             }
@@ -756,7 +759,8 @@ int main() {
             error_numbers(&chose);
 
             if (chose != 0) {
-                list* buffer;
+                struct list* buffer;
+                 current = list.tail;
                 if (current->previous != NULL) {
                     current->previous->next = current->next;
                 }
@@ -764,13 +768,13 @@ int main() {
                     current->next->previous = current->previous;
 
                 }
-                else { tail = current->previous; }
+                else { list.tail = current->previous; }
 
                 delete current;
                 cin.clear();
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 file.open("students.bin", fstream::out | fstream::binary);
-                current = tail;
+                current = list.tail;
                 int j = 0;
                 while (current != NULL) {
                     file << current->Data.name << "|" << current->Data.birth_date.day << "|" << current->Data.birth_date.month << "|" << current->Data.birth_date.year << "|" << current->Data.admission_date.day << "|" << current->Data.admission_date.month << "|" << current->Data.admission_date.year << "|" << current->Data.institut << "|" << current->Data.department << "|" << current->Data.group << "|" << current->Data.record_book << "|" << current->Data.sex << "|";
@@ -788,7 +792,7 @@ int main() {
                 cout << "Данные успешно удалены" << endl;
                 count_of_dynamic_items--;
             }
-            current = tail;
+            current = list.tail;
             free_memory(current);
             break;
         }
@@ -797,13 +801,14 @@ int main() {
         {
             struct struct_student stud;
             unsigned short int n;
+            class dynamic_list list;
 
             fstream file;
             file.open("students.bin", fstream::in | fstream::binary);
 
             if (file.is_open()) {
                 string b;
-                create_dynamic_spis(&file, &stud, b, &numbers_of_semester, massive_of_semestersandsubjects);
+                create_dynamic_spis(&file, &stud, b, &list.numbers_of_semester, list.massive_of_semestersandsubjects);
             }
             else {
                 cout << "не удалось открыть файл" << endl;
@@ -830,7 +835,7 @@ int main() {
             switch (v) {
             case 0: {
                 struct list* current;
-                current = tail;
+                current = list.tail;
                 free_memory(current);
                 break;
             }
@@ -838,7 +843,7 @@ int main() {
             case 1: {
                 unsigned short int chose;
                 struct list* current;
-                current = tail;
+                current = list.tail;
 
                 cout << endl;
                 for (int i = 0; i < n - 1; i++) {
@@ -850,7 +855,6 @@ int main() {
                 if (chose != 0) {
                     int j = 0;
                     class student student;
-                    numbers_of_semester = student.number_of_semester;
                     student.copy_from_me(&stud);
                     current->Data.name = stud.name;
                     current->Data.birth_date = stud.birth_date;
@@ -861,12 +865,12 @@ int main() {
                     current->Data.record_book = stud.record_book;
                     current->Data.sex = stud.sex;
                     current->Data.institut = stud.institut;
-                    for (int i = 0; i < numbers_of_semester; i++) {
-                        for (int j = 0; j < massive_of_semestersandsubjects[i];j++) {
+                    for (int i = 0; i < current->Data.numbers_of_semester; i++) {
+                        for (int j = 0; j < current->Data.massive_of_semestersandsubjects[i];j++) {
                             current->Data.semester[i].subject[j] = stud.semester[i].subject[j];
                         }
                     }
-                    from_dynamic_spis_to_file(&file, current, &numbers_of_semester);
+                    from_dynamic_spis_to_file(&file, current, &current->Data.numbers_of_semester);
                     cout << "Данные успешно изменены" << endl;
                 }
                 current = tail;
@@ -877,7 +881,7 @@ int main() {
             case 2: {
                 unsigned short int chose;
                 struct list* current;
-                current = tail;
+                current = list.tail;
                 cout << endl;
                 for (int i = 0; i < n - 1; i++) {
                     current = current->previous;
@@ -901,11 +905,11 @@ int main() {
                         }
                     }
                     current->Data.name = name;
-                    from_dynamic_spis_to_file(&file, current,&numbers_of_semester);
+                    from_dynamic_spis_to_file(&file, current, &current->Data.numbers_of_semester);
                     cout << "Данные успешно изменены" << endl;
 
                 }
-                current = tail;
+                current = list.tail;
                 free_memory(current);
                 break;
             }
@@ -913,7 +917,7 @@ int main() {
             case 3: {
                 unsigned short int chose;
                 struct list* current;
-                current = tail;
+                current = list.tail;
 
                 cout << endl;
                 for (int i = 0; i < n - 1; i++) {
@@ -926,11 +930,11 @@ int main() {
                     cout << endl << "введите дату рождения студента" << endl;
                     enter_date(&date);
                     current->Data.birth_date = date;
-                    from_dynamic_spis_to_file(&file, current, &numbers_of_semester);
+                    from_dynamic_spis_to_file(&file, current, &current->Data.numbers_of_semester);
                     cout << "Данные успешно изменены" << endl;
 
                 }
-                current = tail;
+                current = list.tail;
                 free_memory(current);
                 break;
             }
@@ -938,7 +942,7 @@ int main() {
             case 4: {
                 unsigned short int chose;
                 struct list* current;
-                current = tail;
+                current = list.tail;
                 cout << endl;
                 for (int i = 0; i < n - 1; i++) {
                     current = current->previous;
@@ -950,11 +954,11 @@ int main() {
                     cout << endl << "введите дату поступления студента" << endl;
                     enter_date(&date);
                     current->Data.admission_date = date;
-                    from_dynamic_spis_to_file(&file, current,&numbers_of_semester);
+                    from_dynamic_spis_to_file(&file, current,&current->Data.numbers_of_semester);
                     cout << "Данные успешно изменены" << endl;
 
                 }
-                current = tail;
+                current = list.tail;
                 free_memory(current);
                 break;
             }
@@ -962,7 +966,7 @@ int main() {
             case 5: {
                 unsigned short int chose;
                 struct list* current;
-                current = tail;
+                current = list.tail;
                 cout << endl;
                 for (int i = 0; i < n - 1; i++) {
                     current = current->previous;
@@ -982,11 +986,11 @@ int main() {
                     current->Data.institut = inst;
                     current->Data.department = dep;
                     current->Data.group = group;
-                    from_dynamic_spis_to_file(&file, current,&numbers_of_semester);
+                    from_dynamic_spis_to_file(&file, current,&current->Data.numbers_of_semester);
                     cout << "Данные успешно изменены" << endl;
 
                 }
-                current = tail;
+                current = list.tail;
                 free_memory(current);
                 break;
             }
@@ -995,7 +999,7 @@ int main() {
             {
                 unsigned short int chose;
                 struct list* current;
-                current = tail;
+                current = list.tail;
                 cout << endl;
                 for (int i = 0; i < n - 1; i++) {
                     current = current->previous;
@@ -1007,18 +1011,18 @@ int main() {
                     cout << endl << "введите пол студента" << endl;
                     toomanysymbols(&sex, 3);
                     current->Data.sex = sex;
-                    from_dynamic_spis_to_file(&file, current, &numbers_of_semester);
+                    from_dynamic_spis_to_file(&file, current, &current->Data.numbers_of_semester);
                     cout << "Данные успешно изменены" << endl;
 
                 }
-                current = tail;
+                current = list.tail;
                 free_memory(current);
                 break;
             }
             case 7: {
                 unsigned short int chose;
                 struct list* current;
-                current = tail;
+                current = list.tail;
                 cout << endl;
                 for (int i = 0; i < n - 1; i++) {
                     current = current->previous;
@@ -1030,18 +1034,18 @@ int main() {
                     cout << endl << "введите номер зачетной книжки студента" << endl;
                     toomanysymbols(&recordbook, 15);
                     current->Data.record_book = recordbook;
-                    from_dynamic_spis_to_file(&file, current, &numbers_of_semester);
+                    from_dynamic_spis_to_file(&file, current, &current->Data.numbers_of_semester);
                     cout << "Данные успешно изменены" << endl;
 
                 }
-                current = tail;
+                current = list.tail;
                 free_memory(current);
                 
             }
                   break;
             default: {
                 cout << "такой команды нет" << endl;
-                list* current = tail;
+                struct list* current = list.tail;
                 free_memory(current);
                 break;
             }
@@ -1055,11 +1059,12 @@ int main() {
 
             struct struct_student stud;
             fstream file;
+            class dynamic_list list;
 
             file.open("students.bin", fstream::in | fstream::binary);
             if (file.is_open()) {
                 string b;
-                create_dynamic_spis(&file, &stud, b, &numbers_of_semester, massive_of_semestersandsubjects);
+                list.create_dynamic_spis(&file, &stud, b);
             }
             else {
                 cout << "не удалось открыть файл" << endl;
@@ -1080,8 +1085,8 @@ int main() {
                 }
                 else { break; }
             }
-            search_with_interval(&tail, interval_start, interval_end, &numbers_of_semester, massive_of_semestersandsubjects);
-            struct list* current = tail;
+            search_with_interval(&list.tail, interval_start, interval_end, &numbers_of_semester, massive_of_semestersandsubjects);
+            struct list* current = list.tail;
             struct list* buffer;
 
             if (tail == NULL) {
@@ -1100,34 +1105,33 @@ int main() {
         
         case 5: {
             struct struct_student stud;
+            class dynamic_list list;
             fstream file;
             dynamic_list list1;
-            list* buffer;
+            struct list* buffer;
             
 
             file.open("students.bin", fstream::in | fstream::binary);
             if (file.is_open()) {
                 string b;
-                create_dynamic_spis(&file, &stud, b, &numbers_of_semester, massive_of_semestersandsubjects);
+                list.create_dynamic_spis(&file, &stud, b);
             }
             else {
                 cout << "не удалось открыть файл" << endl;
                 break;
             }
             file.close();
-            list* current = tail;
+            struct list* current = list.tail;
             
-            print_dynamic(current, &numbers_of_semester,massive_of_semestersandsubjects);
+            print_dynamic(current, &current->Data.numbers_of_semester, current->Data.massive_of_semestersandsubjects);
                
-            current = tail;
+            current = list.tail;
             free_memory(current);
             break;
         }
 
-        default:
+        default:       
             cout << "такой команды нет" << endl;
-            list* current = tail;
-            free_memory(current);
             break;
         }
         cout << endl <<"введие 0 чтобы закрыть программу или любое число чтобы продолжить" << endl;
