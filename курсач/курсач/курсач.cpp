@@ -43,7 +43,6 @@ struct list {
 struct list* head;
 struct list* tail;
 
-unsigned short int count_of_dynamic_items = 0;
 /*void dynamic_add(struct_student Data) {
 
     struct list* newitem = new list();
@@ -307,11 +306,7 @@ void get_from_file(fstream* file, struct_student* stud, string b, unsigned short
 void search_with_interval(struct list** tail, unsigned short int a, unsigned short int b) {
     struct list* current = *tail;
     struct list* buffer;
-<<<<<<< HEAD
-    int count_of_trois; 
-=======
     float count_of_trois;
->>>>>>> работает 5 4 и 1 кейс
     unsigned short int numbers_of_semester;
     int j = 0;
     unsigned short int number_of_marks;
@@ -784,6 +779,7 @@ int main() {
             unsigned short int n;
             class dynamic_list list;
             fstream file;
+            string number_of_record_book;
             file.open("students.bin", fstream::in | fstream::binary);
 
             if (file.is_open()) {
@@ -795,57 +791,54 @@ int main() {
             }
             file.close();
 
-            while (true) {
-                cout << "Введите номер по счету студента, данные которого вы хотите удалить: ";
-                error_numbers(&n);
-                if (n > list.count_of_dynamic_items) {
-                    cout << "в фалйе нет столько записей. Количество записей в файле: " << list.count_of_dynamic_items << endl << "Попробуйте снова" << endl;
-                }
-                else { break; }
-            }
+            cout << "Введите номер зачетной книжки студента, данные которого вы хотите удалить: " ;
+            toomanysymbols(&number_of_record_book, 7);
+            
             cout << endl;
-            struct list* current = list.tail;
-            for (int i = 0; i < n - 1; i++) {
-                current = current->previous;
-            }
-
-            cout << "вы хотите удалить данные студента " << current->Data.name << endl << "введите  0, чтобы отменить и любое число чтобы продолжить " << endl;
             unsigned short int chose;
-            error_numbers(&chose);
-
-            if (chose != 0) {
-                struct list* buffer;
-                 current = list.tail;
-                if (current->previous != NULL) {
-                    current->previous->next = current->next;
+            struct list* current = list.tail;
+            bool fl = true;
+            while (true) {
+                if (current->Data.record_book == number_of_record_book) {
+                    cout << "вы хотите удалить данные студента " << current->Data.name << endl << "введите  0, чтобы отменить и любое число чтобы продолжить " << endl;                 
+                    error_numbers(&chose);
+                    break;
                 }
-                if (current->next != NULL) {
-                    current->next->previous = current->previous;
+                else { current = current->previous; }
+                if (current == NULL) { cout << "студента с введенным номером зачетной книжки нет" << endl; fl = false;  break; }
+            }
+            if (fl != false) {
+                if (chose != 0) {
+                    struct list* buffer;                  ;
+                    if (current->previous != NULL) {
+                        current->previous->next = current->next;
+                    }
+                    if (current->next != NULL) {
+                        current->next->previous = current->previous;
 
-                }
-                else { list.tail = current->previous; }
+                    }
+                    else { list.tail = current->previous; }
 
-                delete current;
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                file.open("students.bin", fstream::out | fstream::binary);
-                current = list.tail;
-                int j = 0;
-                while (current != NULL) {
-                    file << current->Data.name << "|" << current->Data.birth_date.day << "|" << current->Data.birth_date.month << "|" << current->Data.birth_date.year << "|" << current->Data.admission_date.day << "|" << current->Data.admission_date.month << "|" << current->Data.admission_date.year << "|" << current->Data.institut << "|" << current->Data.department << "|" << current->Data.group << "|" << current->Data.record_book << "|" << current->Data.sex << "|";
-                    for (int i = 0; i < stud.numbers_of_semester; i++) {
-                        file << "{" << i << "}";
-                        while (true) {
-                            file << current->Data.semester[i].subject[j].name << "|" << current->Data.semester[i].subject[j].mark << "|";
-                            j++;
-                        }
-                    };
-                    file << "\n";
-                    current = current->previous;
+                    delete current;
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    file.open("students.bin", fstream::out | fstream::binary);
+                    current = list.tail;
+                    while (current != NULL) {
+                        file << current->Data.name << "|" << current->Data.birth_date.day << "|" << current->Data.birth_date.month << "|" << current->Data.birth_date.year << "|" << current->Data.admission_date.day << "|" << current->Data.admission_date.month << "|" << current->Data.admission_date.year << "|" << current->Data.institut << "|" << current->Data.department << "|" << current->Data.group << "|" << current->Data.record_book << "|" << current->Data.sex << "|";
+                        for (int i = 0; i < current->Data.numbers_of_semester; i++) {
+                            file << "{" << i << "}";
+                            for (int j = 0; j < current->Data.massive_of_semestersandsubjects[i];j++) {
+                                file << current->Data.semester[i].subject[j].name << "|" << current->Data.semester[i].subject[j].mark << "|";
+                            }
+                        };
+                        file << "\n";
+                        current = current->previous;
+                    }
+                    file.close();
+                    cout << "Данные успешно удалены" << endl;
+                    list.count_of_dynamic_items--;
                 }
-                file.close();
-                cout << "Данные успешно удалены" << endl;
-                count_of_dynamic_items--;
             }
             current = list.tail;
             list.free_memory();
@@ -874,8 +867,8 @@ int main() {
                 cout << "Введите номер по счету студента, данные которого вы хотите изменить: ";
                 error_numbers(&n);
                 
-                if (n > count_of_dynamic_items) {
-                    cout << "в файле нет столько записей. Количество записей в файле: " << count_of_dynamic_items << endl << "Попробуйте снова" << endl;
+                if (n > list.count_of_dynamic_items) {
+                    cout << "в файле нет столько записей. Количество записей в файле: " << list.count_of_dynamic_items << endl << "Попробуйте снова" << endl;
                 }
                 else if (n <= 0) {
                     cout << "введите число больше нуля" << endl;
