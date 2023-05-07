@@ -100,9 +100,10 @@ wrong_month:
     }
 
     cout << endl << "Год: ";
-    error_numbers(&date->year);
-    if (date->year > 2023) {
-        cout << endl << "привет будущее!" << endl;
+    while (true) {
+        error_numbers(&date->year);
+        if (date->year > 2100 or date->year < 1900) { cout << "поле даты не должно быть меньше 1900 и больше 2100" << endl; }
+        else { break; }
     }
 };
 
@@ -142,10 +143,17 @@ void print_date(unsigned short int day, unsigned short int month, unsigned short
     }
     if (month > 9) {
         cout << month << ".";
+<<<<<<< HEAD
     }
     else {
         cout << 0 << month << ".";
     }
+=======
+    }
+    else {
+        cout << 0 << month << ".";
+    }
+>>>>>>> баг фикс 3 кейса
     cout << year; cout.width(width);cout << " " << "|";
 }
 
@@ -317,7 +325,10 @@ void search_with_interval(struct list** tail, unsigned short int a, unsigned sho
             if (current->previous != NULL) {
                 buffer = current->previous;
                 buffer->next = current->next;
-                buffer->next->previous = buffer;
+                if (buffer->next != NULL) {
+                    buffer->next->previous = buffer;
+                }
+                else { *tail = buffer; }
                 delete current;
                 current = buffer;
                 if (current->next == NULL) {
@@ -332,7 +343,6 @@ void search_with_interval(struct list** tail, unsigned short int a, unsigned sho
                     current->next->previous = current->previous;
                 }
                 delete current;
-
                 break;
             }
         }
@@ -354,7 +364,11 @@ bool do_not_enter_numbers(string* str) {
 }
 bool do_not_enter_special_symbols(string* str) {
    
+<<<<<<< HEAD
    if (str->find("~") != string::npos or str->find("`") != string::npos or str->find("!") != string::npos or str->find("@") != string::npos or str->find("$") != string::npos or str->find("%") != string::npos or str->find("^") != string::npos or str->find("&") != string::npos or str->find("*") != string::npos or str->find("(") != string::npos or str->find(")") != string::npos or str->find("_") != string::npos or str->find("+") != string::npos or str->find("=") != string::npos or str->find("{") != string::npos or str->find("}") != string::npos or str->find("[") != string::npos or str->find("]") != string::npos or str->find(":") != string::npos or str->find(";") != string::npos or str->find(".") != string::npos or str->find(",") != string::npos or str->find("<") != string::npos  or str->find(">") != string::npos or str->find("?") != string::npos or str->find("/") != string::npos or str->find("|") != string::npos or str->find("\\") != string::npos) {
+=======
+   if (str->find("~") != string::npos or str->find("`") != string::npos or str->find("!") != string::npos or str->find("@") != string::npos or str->find("$") != string::npos or str->find("%") != string::npos or str->find("^") != string::npos or str->find("&") != string::npos or str->find("*") != string::npos or str->find("(") != string::npos or str->find(")") != string::npos or str->find("_") != string::npos or str->find("+") != string::npos or str->find("=") != string::npos or str->find("{") != string::npos or str->find("}") != string::npos or str->find("[") != string::npos or str->find("]") != string::npos or str->find(":") != string::npos or str->find(";") != string::npos or str->find(".") != string::npos or str->find(",") != string::npos or str->find("<") != string::npos  or str->find(">") != string::npos or str->find("?") != string::npos or str->find("/") != string::npos or str->find("|") != string::npos or str->find("\\") != string::npos or str->find("№") != string::npos or str->find("'") != string::npos) {
+>>>>>>> баг фикс 3 кейса
         str->clear();
         return true;    
     }
@@ -363,14 +377,16 @@ bool do_not_enter_special_symbols(string* str) {
 void from_dynamic_spis_to_file(fstream *file, struct list** tail, unsigned short int* numbers_of_semester) {
     file->open("students.bin", fstream::out | fstream::binary);
     struct list* current = *tail;
+<<<<<<< HEAD
     int j = 0;
+=======
+>>>>>>> баг фикс 3 кейса
     while (current != NULL) {
         *file << current->Data.name << "|" << current->Data.birth_date.day << "|" << current->Data.birth_date.month << "|" << current->Data.birth_date.year << "|" << current->Data.admission_date.day << "|" << current->Data.admission_date.month << "|" << current->Data.admission_date.year << "|" << current->Data.institut << "|" << current->Data.department << "|" << current->Data.group << "|" << current->Data.record_book << "|" << current->Data.sex << "|";
         for (int i = 0; i <*numbers_of_semester; i++) {
             *file << "{" << i << "}";
-            while (true) {
+            for (unsigned short int j = 0; j < current->Data.massive_of_semestersandsubjects[i];j++) {
                 *file << current->Data.semester[i].subject[j].name << "|" << current->Data.semester[i].subject[j].mark << "|";
-                j++;
             }
         };
         *file << "\n";
@@ -397,7 +413,7 @@ private:
     string record_book;
     string sex;
 
-    Semester semester[9];
+    Semester semester[10];
     
 
     string strbuf;
@@ -496,7 +512,11 @@ public:
         cout << endl << "введите количество семестров" << endl;
         while (true) {
             error_numbers(&numbers_of_semester);
+<<<<<<< HEAD
             if (numbers_of_semester > 10) { cout << "максимальное количсетво семестров-10"; }
+=======
+            if (numbers_of_semester > 10) { cout << "максимальное количсетво семестров-10" << endl; }
+>>>>>>> баг фикс 3 кейса
             else { break; }
         }
         cout << endl << "введите предметы и оценки студента" << endl;
@@ -504,7 +524,11 @@ public:
             cout << "введите количество предметов в семестре номер " << i+1 << endl;
             while (true) {
                 error_numbers(&massive_of_semestersandsubjects[i]);
+<<<<<<< HEAD
                 if (massive_of_semestersandsubjects[i] > 9) { cout << "максимальное количсетво семестров-9";  }
+=======
+                if (massive_of_semestersandsubjects[i] > 9) { cout << "максимальное количсетво семестров-9" << endl;  }
+>>>>>>> баг фикс 3 кейса
                 else { break; }
             }
             cout << "введите результаты " << i + 1 << " семестра" << endl;
@@ -751,7 +775,11 @@ void Crypt() {
     }
     ofstream file;
     file.open("key.txt", ios::binary);
+<<<<<<< HEAD
     file.write(pass, 65);
+=======
+    file.write(pass, 64);
+>>>>>>> баг фикс 3 кейса
     file.close();
     
     command = "openssl\\bin\\openssl.exe rsautl -encrypt -inkey rsa.public -pubin -in key.txt -out key.txt.enc";
@@ -918,10 +946,17 @@ int main() {
             }
             file.close();
 
+<<<<<<< HEAD
             cout << "Введите номер зачетной книжки студента, данные которого вы хотите удалить: ";
             toomanysymbols(&number_of_record_book, 7);
             cout << "выберите что изменить в данных студнета:" << endl << "0-отменить" << endl << "1-изменить все данные студента" << endl << "2-изменить имя студента" << endl << "3-изменить дату рождения студента" << endl;
             cout << "4-изменить дату поступления студента" << endl << "5-изменить институт, кафедру и группу студента " << endl << "6-изменить пол студента " << endl << "7-изменить номер зачетной книжки студента ";
+=======
+            cout << "Введите номер зачетной книжки студента, данные которого вы хотите изменть: ";
+            toomanysymbols(&number_of_record_book, 7);
+            cout << "выберите что изменить в данных студнета:" << endl << "0-отменить" << endl << "1-изменить все данные студента" << endl << "2-изменить имя студента" << endl << "3-изменить дату рождения студента" << endl;
+            cout << "4-изменить дату поступления студента" << endl << "5-изменить институт, кафедру и группу студента " << endl << "6-изменить пол студента " << endl << "7-изменить номер зачетной книжки студента " << endl;
+>>>>>>> баг фикс 3 кейса
             cout << "8-изменить данные предмета выбранного семестра" << endl;
             unsigned short int v;
             error_numbers(&v);
@@ -929,14 +964,22 @@ int main() {
             bool fl = true;
             while (true) {
                 if (current->Data.record_book == number_of_record_book) {
+<<<<<<< HEAD
                     cout << "вы хотите удалить данные студента " << current->Data.name << endl << "введите  0, чтобы отменить и любое число чтобы продолжить " << endl;
+=======
+                    cout << "вы хотите изменть данные студента " << current->Data.name << endl << "введите  0, чтобы отменить и любое число чтобы продолжить " << endl;
+>>>>>>> баг фикс 3 кейса
                     error_numbers(&chose);
                     break;
                 }
                 else { current = current->previous; }
                 if (current == NULL) { cout << "студента с введенным номером зачетной книжки нет" << endl; fl = false;  break; }
             }
+<<<<<<< HEAD
             if (fl ==false) { v = 0; }
+=======
+            if (fl ==false or chose == 0) { v = 0; }
+>>>>>>> баг фикс 3 кейса
 
             switch (v) {
             case 0: {
@@ -1108,7 +1151,10 @@ int main() {
                 string recordbook;
                 cout << endl << "введите номер зачетной книжки студента" << endl;
                 while (true) {
+<<<<<<< HEAD
                     cout << endl << "введите номер зачетной книжки студента" << endl;
+=======
+>>>>>>> баг фикс 3 кейса
                     toomanysymbols(&recordbook, 7);
                     if (do_not_enter_special_symbols(&recordbook)) {
                         cout << "поле не принимает специальные символы кроме (-) " << endl;
@@ -1139,6 +1185,7 @@ int main() {
                     }
                     else { break; }
                 }
+<<<<<<< HEAD
 
                 while (flag == true) {
                     cout << "данные о предметах в семестре номер " << semestr_number << ":" << endl;
@@ -1230,6 +1277,101 @@ int main() {
                     current = list.tail;
                     list.free_memory();
                 }
+=======
+
+                
+                    cout << "данные о предметах в семестре номер " << semestr_number << ":" << endl;
+                    for (int j = 0; j < current->Data.massive_of_semestersandsubjects[semestr_number - 1]; j++) {
+                        cout << "предмет: " << current->Data.semester[semestr_number - 1].subject[j].name << " оценка: ";
+                        cout << current->Data.semester[semestr_number - 1].subject[j].mark << endl;
+                    }
+                    cout << "введите название предмета, данные которого вы хотите изменить" << endl;
+                    cout << endl << "введите название предмета:  ";
+                    while (true) {
+                        getline(cin,name);
+                        if (size(name) != 0) {
+                            if (size(name) > 30) {
+                                cout << endl << "слишком длинное название, допустимая длина - 30 символов" << endl;
+                                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                                name.clear();
+                            }
+                            else if (do_not_enter_numbers(&name) or do_not_enter_special_symbols(&name)) {
+                                if (do_not_enter_numbers(&name)) {
+                                    cout << "поле не принимает цифры " << endl;
+                                    cin.clear();
+                                }
+                                else {
+                                    cout << "поле не принимает специальные символы кроме (-) " << endl;
+                                    cin.clear();
+                                }
+                            }
+                            else {
+                                break;
+                            }
+                        }
+                    }
+                    
+                    for ( j = 0; j < current->Data.massive_of_semestersandsubjects[semestr_number - 1]; j++) {
+                        if (name == current->Data.semester[semestr_number - 1].subject[j].name) { fl = false; break; }                      
+                    }
+                    if (fl == true) {cout << "введенного вами предмета нет" << endl; break; }
+                    else {
+                        cout << "введите новые дынные о предмете" << endl;
+                        cout << endl << "введите название предмета:  ";
+                        while (true) {
+                            getline(cin, name);
+                            if (size(name) != 0) {
+                                if (size(name) > 30) {
+                                    cout << endl << "слишком длинное название, допустимая длина - 30 символов" << endl;
+                                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                                    name.clear();
+                                }
+                                else if (do_not_enter_numbers(&name) or do_not_enter_special_symbols(&name)) {
+                                    if (do_not_enter_numbers(&name)) {
+                                        cout << "поле не принимает цифры " << endl;
+                                        cin.clear();
+                                    }
+                                    else {
+                                        cout << "поле не принимает специальные символы кроме (-) " << endl;
+                                        cin.clear();
+                                    }
+                                }
+                                else {
+                                    break;
+                                }
+                            }
+                        }
+                        cout << endl << "введите оценку за предмет(цифрой, зачет-1, незачет-0):  ";
+                        while (true) {
+                            cin >> mark;
+                            if (cin.fail()) {
+                                cout << endl << "ошибка ввода, введите число" << endl;
+                                cin.clear();
+                                mark = '\0';
+                                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            }
+                            else if (mark > 5 or mark < 0) {
+                                cout << endl << "ошибка, оценка может принимать значения от 0 до 5" << endl;
+
+                                cin.clear();
+                                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                                mark = '\0';
+                            }
+                            else {
+                                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                                break;
+                            }
+                        }
+                        current->Data.semester[semestr_number - 1].subject[j].name = name;
+                        current->Data.semester[semestr_number - 1].subject[j].mark = mark;
+                        from_dynamic_spis_to_file(&file, &list.tail, &current->Data.numbers_of_semester);
+                        cout << "Данные успешно изменены" << endl;
+                    }
+                    current = list.tail;
+                    list.free_memory();
+                    
+                
+>>>>>>> баг фикс 3 кейса
                 break;
                 
             }
