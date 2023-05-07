@@ -1315,60 +1315,59 @@ int main() {
                         if (name == current->Data.semester[semestr_number - 1].subject[j].name) { fl = false; break; }                      
                     }
                     if (fl == true) {cout << "введенного вами предмета нет" << endl; break; }
-                    else {
-                        cout << "введите новые дынные о предмете" << endl;
-                        cout << endl << "введите название предмета:  ";
-                        while (true) {
-                            getline(cin, name);
-                            if (size(name) != 0) {
-                                if (size(name) > 30) {
-                                    cout << endl << "слишком длинное название, допустимая длина - 30 символов" << endl;
-                                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                                    name.clear();
-                                }
-                                else if (do_not_enter_numbers(&name) or do_not_enter_special_symbols(&name)) {
-                                    if (do_not_enter_numbers(&name)) {
-                                        cout << "поле не принимает цифры " << endl;
-                                        cin.clear();
-                                    }
-                                    else {
-                                        cout << "поле не принимает специальные символы кроме (-) " << endl;
-                                        cin.clear();
-                                    }
+                else {
+                    cout << "введите новые дынные о предмете" << endl;
+                    cout << endl << "введите название предмета:  ";
+                    while (true) {
+                        getline(cin, name);
+                        if (size(name) != 0) {
+                            if (size(name) > 30) {
+                                cout << endl << "слишком длинное название, допустимая длина - 30 символов" << endl;
+                                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                                name.clear();
+                            }
+                            else if (do_not_enter_numbers(&name) or do_not_enter_special_symbols(&name)) {
+                                if (do_not_enter_numbers(&name)) {
+                                    cout << "поле не принимает цифры " << endl;
+                                    cin.clear();
                                 }
                                 else {
-                                    break;
+                                    cout << "поле не принимает специальные символы кроме (-) " << endl;
+                                    cin.clear();
                                 }
                             }
-                        }
-                        cout << endl << "введите оценку за предмет(цифрой, зачет-1, незачет-0):  ";
-                        while (true) {
-                            cin >> mark;
-                            if (cin.fail()) {
-                                cout << endl << "ошибка ввода, введите число" << endl;
-                                cin.clear();
-                                mark = '\0';
-                                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                            }
-                            else if (mark > 5 or mark < 0) {
-                                cout << endl << "ошибка, оценка может принимать значения от 0 до 5" << endl;
-
-                                cin.clear();
-                                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                                mark = '\0';
-                            }
                             else {
-                                cin.ignore(numeric_limits<streamsize>::max(), '\n');
                                 break;
                             }
                         }
-                        current->Data.semester[semestr_number - 1].subject[j].name = name;
-                        current->Data.semester[semestr_number - 1].subject[j].mark = mark;
-                        from_dynamic_spis_to_file(&file, &list.tail, &current->Data.numbers_of_semester);
-                        cout << "Данные успешно изменены" << endl;
                     }
-                    current = list.tail;
-                    list.free_memory();
+                    cout << endl << "введите оценку за предмет(цифрой, зачет-1, незачет-0):  ";
+                    while (true) {
+                        cin >> mark;
+                        if (cin.fail()) {
+                            cout << endl << "ошибка ввода, введите число" << endl;
+                            cin.clear();
+                            mark = '\0';
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        }
+                        else if (mark > 5 or mark < 0) {
+                            cout << endl << "ошибка, оценка может принимать значения от 0 до 5" << endl;
+                            cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            mark = '\0';
+                        }
+                        else {
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            break;
+                        }
+                    }
+                    current->Data.semester[semestr_number - 1].subject[j].name = name;
+                    current->Data.semester[semestr_number - 1].subject[j].mark = mark;
+                    from_dynamic_spis_to_file(&file, &list.tail, &current->Data.numbers_of_semester);
+                    cout << "Данные успешно изменены" << endl;
+                }
+                current = list.tail;
+                list.free_memory();
                     
                 
 >>>>>>> баг фикс 3 кейса
