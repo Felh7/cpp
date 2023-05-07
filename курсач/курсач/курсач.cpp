@@ -4,6 +4,7 @@
 #include<fstream>
 #include <limits> // для numeric limits
 #include<windows.h>
+#include <time.h>
 #undef max
 using namespace std;
 
@@ -30,7 +31,7 @@ struct struct_student {
     string group;
     string record_book;
     string sex;
-    Semester semester[9];
+    Semester semester[10];
     unsigned short int numbers_of_semester;
     unsigned short int massive_of_semestersandsubjects[9];
 };
@@ -43,23 +44,7 @@ struct list {
 struct list* head;
 struct list* tail;
 
-/*void dynamic_add(struct_student Data) {
 
-    struct list* newitem = new list();
-    newitem->Data = Data;
-    if (count_of_dynamic_items == 0) {
-        newitem->next = NULL;
-        tail = newitem;
-    }
-    else
-    {
-        newitem->next = head;
-        newitem->next->previous = newitem;
-    }
-    newitem->previous = NULL;
-    head = newitem;
-    count_of_dynamic_items++;
-}*/
 void error_numbers(unsigned short int* n) {
     while (true) {
         cin >> *n;
@@ -143,27 +128,26 @@ void menu() {
     cout << "введите 3 для изменения данных студента в файле" << endl;
     cout << "введите 4 для выведения данных студентов у которых не больше 25 процентов троек с указанныи интервалом даты рождения" << endl;
     cout << "введите 5 для выведения данных всех студентов в файле" << endl;
+    cout << "введите 6 для шифрования файла" << endl;
+    cout << "введите 7 для дешифрования файла" << endl;
 }
-
-/*void free_memory(list* current) {
-    list* buffer;
-    while (current != NULL) {
-        if (current->previous != NULL) {
-            current->previous->next = current->next;
-            buffer = current->previous;
-            tail = buffer;
-            delete (current);
-            current = buffer;
-        }
-        else {
-            delete(current);
-            tail = NULL;
-            count_of_dynamic_items = 0;
-
-            break;
-        }
+void print_date(unsigned short int day, unsigned short int month, unsigned short int year, unsigned short int width) {
+    cout << "|" ;
+    cout << left;
+    if (day > 9) {
+        cout << day << ".";
     }
-}*/
+    else {
+        cout << 0 << day << ".";
+    }
+    if (month > 9) {
+        cout << month << ".";
+    }
+    else {
+        cout << 0 << month << ".";
+    }
+    cout << year; cout.width(width);cout << " " << "|";
+}
 
 void get_from_file(fstream* file, struct_student* stud, string b, unsigned short int *numbers_of_semester, unsigned short int* massive_of_semestersandsubjects) {
     while (true) {
@@ -361,101 +345,24 @@ void search_with_interval(struct list** tail, unsigned short int a, unsigned sho
 
     }
 }
-/*void print_dynamic(struct list* tail, unsigned short int* numbers_of_semester, unsigned short int* massive_of_semestersandsubjects) {
-    struct list* current = tail;
-    while (true) {
-        cout << endl;
-        cout << "------------------------------------------------------------------------------------------------------------------------------------------------------";
-        cout << endl<< "фамилия имя отчество: " << current->Data.name << endl;
-        cout << "дата рождения: ";
-        cout << current->Data.birth_date.day << " ";
-        cout << current->Data.birth_date.month << " ";
-        cout << current->Data.birth_date.year << endl;
-        cout << "дата поступления: ";
-        cout << current->Data.admission_date.day << " ";
-        cout << current->Data.admission_date.month << " ";
-        cout << current->Data.admission_date.year << endl;
-        cout << "институт: " << current->Data.institut << endl;
-        cout << "кафедра: " << current->Data.department << endl;
-        cout << "группа: " << current->Data.group << endl;
-        cout << "зачетная книжка: " << current->Data.record_book << endl;
-        cout << "пол: " << current->Data.sex << endl;
-        unsigned short int j = 0;
-        for (int i = 0; i < *numbers_of_semester+1; i++) {
-            cout <<endl<< "семестр " << i + 1 << endl;
-            while (j< massive_of_semestersandsubjects[i]) {
-                cout << current->Data.semester[i].subject[j].name << "-" << current->Data.semester[i].subject[j].mark << "  ";
-                j++;
-            }
-            cout << endl;
-            j = 0;
-        }
-        cout << "------------------------------------------------------------------------------------------------------------------------------------------------------";
-        cout << endl;
-        if (current->previous != NULL) {
-            current = current->previous;
-        }
-        else { break; }
-    }
-}*/
-/*void create_dynamic_spis(fstream* file, struct struct_student* stud, string b, unsigned short int* numbers_of_semester, unsigned short int* massive_of_semestersandsubjects) {
-    while (true) {
-
-        get_from_file(file, stud, b, numbers_of_semester, massive_of_semestersandsubjects);
-        dynamic_add(*stud);
-        unsigned short int i = *numbers_of_semester;
-        unsigned short int j ;
-        //unsigned short int j = numbers_of_subjects - 1;
-        stud->name.clear();
-        stud->group.clear();
-        stud->institut.clear();
-        stud->sex.clear();
-        stud->record_book.clear();
-        stud->department.clear();
-        while (true) {
-            
-            for (j = 0; j < massive_of_semestersandsubjects[i]; j++) {
-                stud->semester[i].subject[j].name.clear();
-               
-            };
-            if (i == 0) {
-                break;
-            }
-            i--;          
-            //j = numbers_of_subjects - 1;
-        }
-        file->get();
-        if (file->eof()) { break; }
-        else { file->seekg(-1, fstream::cur); }
-    }
-}*/
 bool do_not_enter_numbers(string* str) {
-    unsigned short int i = 0;
-    
-    for (i;i<size(*str);i++ ){
-        if (str[i] == "0" or str[i] == "1" or str[i] == "2" or str[i] == "3" or str[i] == "4" or str[i] == "5" or str[i] == "6" or str[i] == "7" or str[i] == "8" or str[i] == "9"  ){
-            cout << "поле не принимает цифры" << endl;
-            str->clear();
-            return false;
-            break;
-        }
-    }
+    if (str->find("0") != string::npos or str->find("1") != string::npos or str->find("2") != string::npos or str->find("3") != string::npos or str->find("4") != string::npos or str->find("5") != string::npos or str->find("6") != string::npos or str->find("7") != string::npos or str->find("8") != string::npos or str->find("9") != string::npos){
+        str->clear();
+        return true; 
+     }
+    else { return false; }
 }
 bool do_not_enter_special_symbols(string* str) {
-    unsigned short int i = 0;
-
-    for (i; i < size(*str); i++) {
-        if (str[i] == "~" or str[i] == "`" or str[i] == "!" or str[i] == "@" or str[i] == "$" or str[i] == "%" or str[i] == "^" or str[i] == "&" or str[i] == "*" or str[i] == "(" or str[i] == ")" or str[i] == "_" or str[i] == "+" or str[i] == "=" or str[i] == "{" or str[i] == "}" or str[i] == "[" or str[i] == "]" or str[i] == ":" or str[i] == ";" or str[i] == "." or str[i] == "," or str[i] == "<" or str[i] == ">" or str[i] == "?" or str[i] == "/" or str[i] == "|") {
-            cout << "поле не принимает специальные символы кроме (-) " << endl;
-            str->clear();
-            return false;
-            break;
-        }
+   
+   if (str->find("~") != string::npos or str->find("`") != string::npos or str->find("!") != string::npos or str->find("@") != string::npos or str->find("$") != string::npos or str->find("%") != string::npos or str->find("^") != string::npos or str->find("&") != string::npos or str->find("*") != string::npos or str->find("(") != string::npos or str->find(")") != string::npos or str->find("_") != string::npos or str->find("+") != string::npos or str->find("=") != string::npos or str->find("{") != string::npos or str->find("}") != string::npos or str->find("[") != string::npos or str->find("]") != string::npos or str->find(":") != string::npos or str->find(";") != string::npos or str->find(".") != string::npos or str->find(",") != string::npos or str->find("<") != string::npos  or str->find(">") != string::npos or str->find("?") != string::npos or str->find("/") != string::npos or str->find("|") != string::npos or str->find("\\") != string::npos) {
+        str->clear();
+        return true;    
     }
+   else { return false; }
 }
-void from_dynamic_spis_to_file(fstream *file, struct list* current, unsigned short int* numbers_of_semester) {
+void from_dynamic_spis_to_file(fstream *file, struct list** tail, unsigned short int* numbers_of_semester) {
     file->open("students.bin", fstream::out | fstream::binary);
-    current = tail;
+    struct list* current = *tail;
     int j = 0;
     while (current != NULL) {
         *file << current->Data.name << "|" << current->Data.birth_date.day << "|" << current->Data.birth_date.month << "|" << current->Data.birth_date.year << "|" << current->Data.admission_date.day << "|" << current->Data.admission_date.month << "|" << current->Data.admission_date.year << "|" << current->Data.institut << "|" << current->Data.department << "|" << current->Data.group << "|" << current->Data.record_book << "|" << current->Data.sex << "|";
@@ -507,15 +414,21 @@ public:
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         cout << "введите Ф.И.О. студента(используйте пробелы для разграничения инициалов)" << endl;
         while (true) {
+            
             getline(cin, this->name);
             if (size(this->name) != 0) {
-                if (size(this->name) > 151) {
-                    cout << endl << "слишком длинное название, допустимая длина - 150 символов" << endl;
+                if (size(this->name) > 100) {
+                    cout << endl << "слишком длинное название, допустимая длина - 100 символов" << endl;
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');
                     this->name.clear();
                 }
                 else {
-                    if (do_not_enter_numbers(&this->name) and do_not_enter_special_symbols(&this->name)) {
+                    if (do_not_enter_numbers(&this->name)) { cout << "поле не принимает цифры " << endl;cin.clear();  }
+                    else if (do_not_enter_special_symbols(&this->name)) {
+                        cout << "поле не принимает специальные символы кроме (-) " << endl;
+                        cin.clear();
+                    }
+                    else{
                         break;
                     }
                 }
@@ -526,14 +439,51 @@ public:
         enter_date(&this->birth_date);
         cout << endl << "введите дату поступления студента" << endl;
         enter_date(&this->admission_date);
-        cout << endl << "введите институт студента" << endl;
-        toomanysymbols(&this->institut, 5);
-        cout << endl << "введите кафедру студента" << endl;
-        toomanysymbols(&this->department, 5);
-        cout << endl << "введите группу студента" << endl;
-        toomanysymbols(&this->group, 10);
-        cout << endl << "введите номер зачетной книжки студента" << endl;
-        toomanysymbols(&this->record_book, 7);
+        while (true) {
+            cout << endl << "введите институт студента" << endl;
+            toomanysymbols(&this->institut, 5);
+            if (do_not_enter_numbers(&this->institut)) { cout << "поле не принимает цифры " << endl; cin.clear(); }
+            else if (do_not_enter_special_symbols(&this->institut)) {
+                cout << "поле не принимает специальные символы кроме (-) " << endl;
+                cin.clear();
+            }
+            else {
+                break;
+            }
+        }
+        while (true) {
+            cout << endl << "введите кафедру студента" << endl;
+            toomanysymbols(&this->department, 5);
+            if (do_not_enter_special_symbols(&this->department)) {
+                cout << "поле не принимает специальные символы кроме (-) " << endl;
+                cin.clear();
+            }
+            else {
+                break;
+            }
+        }
+        while (true) {
+            cout << endl << "введите группу студента" << endl;
+            toomanysymbols(&this->group, 10);
+            if (do_not_enter_special_symbols(&this->group)) {
+                cout << "поле не принимает специальные символы кроме (-) " << endl;
+                cin.clear();
+            }
+            else {
+                break;
+            }  
+        }
+        while (true) {
+            cout << endl << "введите номер зачетной книжки студента" << endl;
+            toomanysymbols(&this->record_book, 7);
+            if (do_not_enter_special_symbols(&this->record_book)) {
+                cout << "поле не принимает специальные символы кроме (-) " << endl;
+                cin.clear();
+            }
+            else {
+                break;
+            }
+        }
         cout << endl << "введите пол студента" << endl;
         while (true) {
             toomanysymbols(&this->sex, 1);
@@ -544,22 +494,39 @@ public:
             else { break; }
         }
         cout << endl << "введите количество семестров" << endl;
-        error_numbers(&numbers_of_semester);
-        
+        while (true) {
+            error_numbers(&numbers_of_semester);
+            if (numbers_of_semester > 10) { cout << "максимальное количсетво семестров-10"; }
+            else { break; }
+        }
         cout << endl << "введите предметы и оценки студента" << endl;
         for (int i = 0; i < numbers_of_semester; i++) {
             cout << "введите количество предметов в семестре номер " << i+1 << endl;
-            error_numbers(&massive_of_semestersandsubjects[i]);
+            while (true) {
+                error_numbers(&massive_of_semestersandsubjects[i]);
+                if (massive_of_semestersandsubjects[i] > 9) { cout << "максимальное количсетво семестров-9";  }
+                else { break; }
+            }
             cout << "введите результаты " << i + 1 << " семестра" << endl;
             for (int j = 0; j < massive_of_semestersandsubjects[i]; j++) {
                 cout << endl << "введите название предмета:  ";
                 while (true) {
                     getline(cin, this->semester[i].subject[j].name);
                     if (size(this->semester[i].subject[j].name) != 0) {
-                        if (size(this->semester[i].subject[j].name) > 60) {
-                            cout << endl << "слишком длинное название, допустимая длина - 60 символов" << endl;
+                        if (size(this->semester[i].subject[j].name) > 30) {
+                            cout << endl << "слишком длинное название, допустимая длина - 30 символов" << endl;
                             cin.ignore(numeric_limits<streamsize>::max(), '\n');
                             this->semester[i].subject[j].name.clear();
+                        }
+                        else if (do_not_enter_numbers(&this->semester[i].subject[j].name) or do_not_enter_special_symbols(&this->semester[i].subject[j].name)) {
+                            if (do_not_enter_numbers(&this->semester[i].subject[j].name)) {
+                                cout << "поле не принимает цифры " << endl; 
+                                cin.clear();
+                            }
+                            else {
+                                cout << "поле не принимает специальные символы кроме (-) " << endl;
+                                cin.clear();
+                            }
                         }
                         else {
                             break;
@@ -619,7 +586,7 @@ public:
     struct list* tail;
     struct list* head;
     unsigned short int numbers_of_semester;
-    unsigned short int massive_of_semestersandsubjects[9];
+    unsigned short int massive_of_semestersandsubjects[10];
     unsigned short int count_of_dynamic_items =0;
 
     dynamic_list() { count_of_dynamic_items = 0; tail = NULL; head = NULL; }
@@ -664,33 +631,57 @@ public:
         struct list* current = this->tail;
         while (true) {
             cout << endl;
-            cout << "------------------------------------------------------------------------------------------------------------------------------------------------------";
-            cout << endl << "фамилия имя отчество: " << current->Data.name << endl;
-            cout << "дата рождения: ";
-            cout << current->Data.birth_date.day << " ";
-            cout << current->Data.birth_date.month << " ";
-            cout << current->Data.birth_date.year << endl;
-            cout << "дата поступления: ";
-            cout << current->Data.admission_date.day << " ";
-            cout << current->Data.admission_date.month << " ";
-            cout << current->Data.admission_date.year << endl;
-            cout << "институт: " << current->Data.institut << endl;
-            cout << "кафедра: " << current->Data.department << endl;
-            cout << "группа: " << current->Data.group << endl;
-            cout << "зачетная книжка: " << current->Data.record_book << endl;
-            cout << "пол: " << current->Data.sex << endl;
+            cout << "|-----------------------------------------------------------------------------------------------------------------------|" <<endl;
+            cout << "|"; cout.width(22);  cout.fill(' '); cout << left << " Фамилия имя отчество" << "|";  cout.width(96); cout << current->Data.name; cout << "|" << endl;
+            cout << "|"; cout.width(22); cout <<left << " Дата рождения";
+            print_date(current->Data.birth_date.day, current->Data.birth_date.month, current->Data.birth_date.year, 86); cout << endl;
+            cout << "|"; cout.width(22); cout << left << "Дата поступления";
+            print_date(current->Data.admission_date.day, current->Data.admission_date.month, current->Data.admission_date.year, 86); cout << endl;
+            cout << "|"; cout.width(22); cout << left << "Институт " << "|"; cout.width(96); cout << current->Data.institut; cout << "|" << endl;
+            cout << "|"; cout.width(22); cout << left << "Кафедра" << "|"; cout.width(96); cout << current->Data.department; cout << "|" << endl;
+            cout << "|"; cout.width(22); cout << left << "Группа" << "|"; cout.width(96); cout << current->Data.group; cout << "|" << endl;
+            cout << "|"; cout.width(22); cout << left << "Зачетная книжка" << "|"; cout.width(96); cout << current->Data.record_book; cout << "|" << endl;
+            cout << "|"; cout.width(22); cout << left << "Пол" << "|"; cout.width(96); cout << current->Data.sex; cout << "|" << endl;
             unsigned short int j = 0;
             for (int i = 0; i < current->Data.numbers_of_semester; i++) {
-                cout << endl << "семестр " << i + 1 << endl;
-                while (j < current->Data.massive_of_semestersandsubjects[i]) {
-                    cout << current->Data.semester[i].subject[j].name << "-" << current->Data.semester[i].subject[j].mark << "  ";
+                cout << "|-----------------------------------------------------------------------------------------------------------------------|" << endl;
+                cout << "|                                                  Семестр " << i + 1 << "                                                            |" << endl;
+                cout << "|-----------------------------------------------------------------------------------------------------------------------|"<<endl;
+                cout << "|         Предмет           |О|         Предмет           |О|         Предмет           |О|         Предмет           |О|" << endl;
+                cout << "|-----------------------------------------------------------------------------------------------------------------------|";
+                cout << endl; cout << "|";
+                while (j < current->Data.massive_of_semestersandsubjects[i]) {             
+                    cout.width(27); cout << current->Data.semester[i].subject[j].name << "|"; cout.width(1); cout << current->Data.semester[i].subject[j].mark << "|";
                     j++;
+                    if (j == 4 or j == 8) { cout << endl << "|"; };
+                    if ((j == current->Data.massive_of_semestersandsubjects[i] and current->Data.massive_of_semestersandsubjects[i]<4) or (j == current->Data.massive_of_semestersandsubjects[i] and current->Data.massive_of_semestersandsubjects[i] > 4 and current->Data.massive_of_semestersandsubjects[i] < 8) or (j == current->Data.massive_of_semestersandsubjects[i] and current->Data.massive_of_semestersandsubjects[i] > 8)) {
+                        if (current->Data.massive_of_semestersandsubjects[i] < 4) {
+                            unsigned short int k = j;
+                            for (j; k < 4; k++) {
+                                cout.width(29); cout << " " << "|";
+                            };                           
+                        }
+                        else if (current->Data.massive_of_semestersandsubjects[i] < 8) {
+                            unsigned short int k = j;
+                            for (j; k < 8; k++) {
+                                cout.width(29); cout << " " << "|";
+                            };
+                        }
+                        else {
+                            unsigned short int k = j;
+                            for (j; k < 12; k++) {
+                                cout.width(29); cout << " " << "|";
+                            }
+                        }
+                    };                   
                 }
                 cout << endl;
                 j = 0;
             }
-            cout << "------------------------------------------------------------------------------------------------------------------------------------------------------";
-            cout << endl;
+            cout << "|-----------------------------------------------------------------------------------------------------------------------|";
+            cout <<endl<< "|Примечание: зачет-1; незачет-0; О-оценка                                                                               |";
+            cout << endl << "|-----------------------------------------------------------------------------------------------------------------------|";
+            cout << endl<<endl;
             if (current->previous != NULL) {
                 current = current->previous;
             }
@@ -734,6 +725,71 @@ public:
 
 
 };
+
+void Crypt() {
+    srand(time(NULL));
+    char* pass = new char[64];
+    for (int i = 0; i < 64; ++i) {
+        switch (rand() % 3) {
+        case 0:
+            pass[i] = rand() % 10 + '0';
+            break;
+        case 1:
+            pass[i] = rand() % 26 + 'A';
+            break;
+        case 2:
+            pass[i] = rand() % 26 + 'a';
+            break;
+        }
+    }
+    pass[64] = '\0';
+    string command = "openssl\\bin\\openssl.exe enc -aes-256-cbc -salt -in students.bin -out students.bin.enc -pass pass:";
+    command += pass;
+    system(command.c_str());
+    if (remove("students.bin") != 0) {
+        cout << "[ERROR] - deleting file failed" << endl;
+    }
+    ofstream file;
+    file.open("key.txt", ios::binary);
+    file.write(pass, 65);
+    file.close();
+    
+    command = "openssl\\bin\\openssl.exe rsautl -encrypt -inkey rsa.public -pubin -in key.txt -out key.txt.enc";
+    system(command.c_str());
+    if (remove("key.txt") != 0) {
+        cout << "[ERROR] - deleting file failed" << endl;
+    }
+    else { cout << endl<< "данные успешно зашифрованы" << endl; }
+
+    
+}
+
+void Decrypt() {
+    string command = "openssl\\bin\\openssl.exe rsautl -decrypt -inkey rsa.private -in key.txt.enc -out key.txt";
+    system(command.c_str());
+    if (remove("key.txt.enc") != 0) {
+        cout << "[ERROR] - deleting file failed" << endl;
+    }
+
+    char* pass = new char[64];
+    ifstream file;
+    file.open("key.txt", ios::binary);
+    file >> pass;
+    file.close();
+    if (remove("key.txt") != 0) {
+        cout << "[ERROR] - deleting file failed" << endl;
+    }
+    
+    command = "openssl\\bin\\openssl.exe enc -aes-256-cbc -d -in students.bin.enc -out students.bin -pass pass:";
+    command += pass;
+    system(command.c_str());
+    if (remove("students.bin.enc") != 0) {
+        cout << "[ERROR] - deleting file failed" << endl;
+    }
+    else { cout << endl << "данные успешно расшифрованы"<<endl; }
+    
+
+}
 int main() {
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
@@ -776,13 +832,13 @@ int main() {
         case 2:
         {
             struct struct_student stud;
-            unsigned short int n;
             class dynamic_list list;
             fstream file;
             string number_of_record_book;
             file.open("students.bin", fstream::in | fstream::binary);
+            if (file.peek() == EOF) { cout << "в файле нет записей" << endl; break; }
 
-            if (file.is_open()) {
+            else if (file.is_open()) {
                 string b;
                 list.create_dynamic_spis(&file, &stud, b);
             }
@@ -808,8 +864,7 @@ int main() {
                 if (current == NULL) { cout << "студента с введенным номером зачетной книжки нет" << endl; fl = false;  break; }
             }
             if (fl != false) {
-                if (chose != 0) {
-                    struct list* buffer;                  ;
+                if (chose != 0) {            
                     if (current->previous != NULL) {
                         current->previous->next = current->next;
                     }
@@ -848,13 +903,13 @@ int main() {
         case 3:
         {
             struct struct_student stud;
-            unsigned short int n;
             class dynamic_list list;
-
+            string number_of_record_book;
+            unsigned short int chose;
             fstream file;
             file.open("students.bin", fstream::in | fstream::binary);
-
-            if (file.is_open()) {
+            if (file.peek() == EOF) { cout << "в файле нет записей" << endl; break; }
+            else if (file.is_open()) {
                 string b;
                 list.create_dynamic_spis(&file, &stud, b);
             }
@@ -863,22 +918,25 @@ int main() {
             }
             file.close();
 
-            while (true) {
-                cout << "Введите номер по счету студента, данные которого вы хотите изменить: ";
-                error_numbers(&n);
-                
-                if (n > list.count_of_dynamic_items) {
-                    cout << "в файле нет столько записей. Количество записей в файле: " << list.count_of_dynamic_items << endl << "Попробуйте снова" << endl;
-                }
-                else if (n <= 0) {
-                    cout << "введите число больше нуля" << endl;
-                }
-                else { break; }
-            }
+            cout << "Введите номер зачетной книжки студента, данные которого вы хотите удалить: ";
+            toomanysymbols(&number_of_record_book, 7);
             cout << "выберите что изменить в данных студнета:" << endl << "0-отменить" << endl << "1-изменить все данные студента" << endl << "2-изменить имя студента" << endl << "3-изменить дату рождения студента" << endl;
             cout << "4-изменить дату поступления студента" << endl << "5-изменить институт, кафедру и группу студента " << endl << "6-изменить пол студента " << endl << "7-изменить номер зачетной книжки студента ";
+            cout << "8-изменить данные предмета выбранного семестра" << endl;
             unsigned short int v;
             error_numbers(&v);
+            struct list* current = list.tail;
+            bool fl = true;
+            while (true) {
+                if (current->Data.record_book == number_of_record_book) {
+                    cout << "вы хотите удалить данные студента " << current->Data.name << endl << "введите  0, чтобы отменить и любое число чтобы продолжить " << endl;
+                    error_numbers(&chose);
+                    break;
+                }
+                else { current = current->previous; }
+                if (current == NULL) { cout << "студента с введенным номером зачетной книжки нет" << endl; fl = false;  break; }
+            }
+            if (fl ==false) { v = 0; }
 
             switch (v) {
             case 0: {
@@ -889,155 +947,140 @@ int main() {
             }
 
             case 1: {
-                unsigned short int chose;
-                struct list* current;
-                current = list.tail;
-
-                cout << endl;
-                for (int i = 0; i < n - 1; i++) {
-                    current = current->previous;
-                }
-                cout << "вы хотите изменить данные студента " << current->Data.name << endl << "введите  0, чтобы отменить и любое число чтобы продолжить " << endl;
-                error_numbers(&chose);
-
-                if (chose != 0) {
-                    int j = 0;
-                    class student student;
-                    student.copy_from_me(&stud);
-                    current->Data.name = stud.name;
-                    current->Data.birth_date = stud.birth_date;
-                    current->Data.admission_date = stud.admission_date;
-                    current->Data.institut = stud.institut;
-                    current->Data.department = stud.department;
-                    current->Data.group = stud.group;
-                    current->Data.record_book = stud.record_book;
-                    current->Data.sex = stud.sex;
-                    current->Data.institut = stud.institut;
-                    for (int i = 0; i < current->Data.numbers_of_semester; i++) {
-                        for (int j = 0; j < current->Data.massive_of_semestersandsubjects[i];j++) {
-                            current->Data.semester[i].subject[j] = stud.semester[i].subject[j];
-                        }
-                    }
-                    from_dynamic_spis_to_file(&file, current, &current->Data.numbers_of_semester);
-                    cout << "Данные успешно изменены" << endl;
-                }
-                current = tail;
-                list.free_memory();
-                break;
+             cout << endl;
+             int j = 0;
+             class student student;
+             student.copy_from_me(&stud);
+             current->Data.name = stud.name;
+             current->Data.birth_date = stud.birth_date;
+             current->Data.admission_date = stud.admission_date;
+             current->Data.institut = stud.institut;
+             current->Data.department = stud.department;
+             current->Data.group = stud.group;
+             current->Data.record_book = stud.record_book;
+             current->Data.sex = stud.sex;
+             current->Data.institut = stud.institut;
+             for (int i = 0; i < current->Data.numbers_of_semester; i++) {
+                 for (int j = 0; j < current->Data.massive_of_semestersandsubjects[i];j++) {
+                     current->Data.semester[i].subject[j] = stud.semester[i].subject[j];
+                 }
+             }
+             from_dynamic_spis_to_file(&file, &list.tail , & current->Data.numbers_of_semester);
+             cout << "Данные успешно изменены" << endl;
+               
+             current = list.tail;
+             list.free_memory();
+             break;
             }
 
-            case 2: {
-                unsigned short int chose;
-                struct list* current;
-                current = list.tail;
-                cout << endl;
-                for (int i = 0; i < n - 1; i++) {
-                    current = current->previous;
-                }
-                cout << "вы хотите изменить данные студента " << current->Data.name << endl << "введите  0, чтобы отменить и любое число чтобы продолжить " << endl;
-                error_numbers(&chose);
-                if (chose != 0) {
-                    string name;
-                    cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    cout << "введите Ф.И.О. студента(используйте пробелы для разграничения инициалов)" << endl;
-                    while (true) {
-                        getline(cin, name);
-                        if (size(name) > 151) {
-                            cout << endl << "слишком длинное название, допустимая длина - 150 символов" << endl;
-                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                            name.clear();
+            case 2: {              
+             cout << endl;            
+                
+             string name;
+             cin.clear();
+             cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "введите Ф.И.О. студента(используйте пробелы для разграничения инициалов)" << endl;
+            while (true) {
+
+                getline(cin,name);
+                if (size(name) != 0) {
+                    if (size(name) > 100) {
+                        cout << endl << "слишком длинное название, допустимая длина - 100 символов" << endl;
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        name.clear();
+                    }
+                    else {
+                        if (do_not_enter_numbers(&name)) { cout << "поле не принимает цифры " << endl; cin.clear(); }
+                        else if (do_not_enter_special_symbols(&name)) {
+                            cout << "поле не принимает специальные символы кроме (-) " << endl;
+                            cin.clear();
                         }
                         else {
                             break;
                         }
                     }
-                    current->Data.name = name;
-                    from_dynamic_spis_to_file(&file, current, &current->Data.numbers_of_semester);
-                    cout << "Данные успешно изменены" << endl;
-
                 }
-                current = list.tail;
-                list.free_memory();
-                break;
+
+            }
+             current->Data.name = name;
+             from_dynamic_spis_to_file(&file, &list.tail, &current->Data.numbers_of_semester);
+             cout << "Данные успешно изменены" << endl;
+             current = list.tail;
+             list.free_memory();
+             break;
             }
 
             case 3: {
-                unsigned short int chose;
-                struct list* current;
-                current = list.tail;
-
-                cout << endl;
-                for (int i = 0; i < n - 1; i++) {
-                    current = current->previous;
-                }
-                cout << "вы хотите изменить данные студента " << current->Data.name << endl << "введите  0, чтобы отменить и любое число чтобы продолжить " << endl;
-                error_numbers(&chose);
-                if (chose != 0) {
-                    struct Date date;
-                    cout << endl << "введите дату рождения студента" << endl;
-                    enter_date(&date);
-                    current->Data.birth_date = date;
-                    from_dynamic_spis_to_file(&file, current, &current->Data.numbers_of_semester);
-                    cout << "Данные успешно изменены" << endl;
-
-                }
+                cout << endl;              
+                struct Date date;
+                cout << endl << "введите дату рождения студента" << endl;
+                enter_date(&date);
+                current->Data.birth_date = date;
+                from_dynamic_spis_to_file(&file, &list.tail, &current->Data.numbers_of_semester);
+                cout << "Данные успешно изменены" << endl;
+             
                 current = list.tail;
                 list.free_memory();
                 break;
             }
 
             case 4: {
-                unsigned short int chose;
-                struct list* current;
-                current = list.tail;
                 cout << endl;
-                for (int i = 0; i < n - 1; i++) {
-                    current = current->previous;
-                }
-                cout << "вы хотите изменить данные студента " << current->Data.name << endl << "введите  0, чтобы отменить и любое число чтобы продолжить " << endl;
-                error_numbers(&chose);
-                if (chose != 0) {
-                    struct Date date;
-                    cout << endl << "введите дату поступления студента" << endl;
-                    enter_date(&date);
-                    current->Data.admission_date = date;
-                    from_dynamic_spis_to_file(&file, current,&current->Data.numbers_of_semester);
-                    cout << "Данные успешно изменены" << endl;
+                struct Date date;
+                cout << endl << "введите дату поступления студента" << endl;
+                enter_date(&date);
+                current->Data.admission_date = date;
+                from_dynamic_spis_to_file(&file, &list.tail,&current->Data.numbers_of_semester);
+                cout << "Данные успешно изменены" << endl;
 
-                }
                 current = list.tail;
                 list.free_memory();
                 break;
             }
 
             case 5: {
-                unsigned short int chose;
-                struct list* current;
-                current = list.tail;
-                cout << endl;
-                for (int i = 0; i < n - 1; i++) {
-                    current = current->previous;
-                }
-                cout << "вы хотите изменить данные студента " << current->Data.name << endl << "введите  0, чтобы отменить и любое число чтобы продолжить " << endl;
-                error_numbers(&chose);
-                if (chose != 0) {
-                    string inst;
-                    string dep;
-                    string group;
+                string inst;
+                string dep;
+                string group;
+                while (true) {
                     cout << endl << "введите институт студента" << endl;
-                    toomanysymbols(&inst, 6);
-                    cout << endl << "введите кафедру студента" << endl;
-                    toomanysymbols(&dep, 7);
-                    cout << endl << "введите группу студента" << endl;
-                    toomanysymbols(&group, 12);
-                    current->Data.institut = inst;
-                    current->Data.department = dep;
-                    current->Data.group = group;
-                    from_dynamic_spis_to_file(&file, current,&current->Data.numbers_of_semester);
-                    cout << "Данные успешно изменены" << endl;
-
+                    toomanysymbols(&inst, 5);
+                    if (do_not_enter_numbers(&inst)) { cout << "поле не принимает цифры " << endl; cin.clear(); }
+                    else if (do_not_enter_special_symbols(&inst)) {
+                        cout << "поле не принимает специальные символы кроме (-) " << endl;
+                        cin.clear();
+                    }
+                    else {
+                        break;
+                    }
                 }
+                while (true) {
+                    cout << endl << "введите кафедру студента" << endl;
+                    toomanysymbols(&dep, 5);
+                    if (do_not_enter_special_symbols(&dep)) {
+                        cout << "поле не принимает специальные символы кроме (-) " << endl;
+                        cin.clear();
+                    }
+                    else {
+                        break;
+                    }
+                }
+                while (true) {
+                    cout << endl << "введите группу студента" << endl;
+                    toomanysymbols(&group, 10);
+                    if (do_not_enter_special_symbols(&group)) {
+                        cout << "поле не принимает специальные символы кроме (-) " << endl;
+                        cin.clear();
+                    }
+                    else {
+                        break;
+                    }
+                }
+                current->Data.institut = inst;
+                current->Data.department = dep;
+                current->Data.group = group;
+                from_dynamic_spis_to_file(&file, &list.tail,&current->Data.numbers_of_semester);
+                cout << "Данные успешно изменены" << endl;
                 current = list.tail;
                 list.free_memory();
                 break;
@@ -1045,59 +1088,157 @@ int main() {
 
             case 6:
             {
-                unsigned short int chose;
-                struct list* current;
-                current = list.tail;
-                cout << endl;
-                for (int i = 0; i < n - 1; i++) {
-                    current = current->previous;
+                string sex;
+                while (true) {
+                    toomanysymbols(&sex, 1);
+                    if (sex != "м" and sex != "ж") {
+                        cout << "поле принимает значение м или ж" << endl;
+                        sex.clear();
+                    }
+                    else { break; }
                 }
-                cout << "вы хотите изменить данные студента " << current->Data.name << endl << "введите  0, чтобы отменить и любое число чтобы продолжить " << endl;
-                error_numbers(&chose);
-                if (chose != 0) {
-                    string sex;
-                    cout << endl << "введите пол студента" << endl;
-                    toomanysymbols(&sex, 3);
-                    current->Data.sex = sex;
-                    from_dynamic_spis_to_file(&file, current, &current->Data.numbers_of_semester);
-                    cout << "Данные успешно изменены" << endl;
-
-                }
+                current->Data.sex = sex;
+                from_dynamic_spis_to_file(&file, &list.tail, &current->Data.numbers_of_semester);
+                cout << "Данные успешно изменены" << endl;
                 current = list.tail;
                 list.free_memory();
                 break;
             }
             case 7: {
-                unsigned short int chose;
-                struct list* current;
-                current = list.tail;
-                cout << endl;
-                for (int i = 0; i < n - 1; i++) {
-                    current = current->previous;
-                }
-                cout << "вы хотите изменить данные студента " << current->Data.name << endl << "введите  0, чтобы отменить и любое число чтобы продолжить " << endl;
-                error_numbers(&chose);
-                if (chose != 0) {
-                    string recordbook;
+                string recordbook;
+                cout << endl << "введите номер зачетной книжки студента" << endl;
+                while (true) {
                     cout << endl << "введите номер зачетной книжки студента" << endl;
-                    toomanysymbols(&recordbook, 15);
-                    current->Data.record_book = recordbook;
-                    from_dynamic_spis_to_file(&file, current, &current->Data.numbers_of_semester);
-                    cout << "Данные успешно изменены" << endl;
-
+                    toomanysymbols(&recordbook, 7);
+                    if (do_not_enter_special_symbols(&recordbook)) {
+                        cout << "поле не принимает специальные символы кроме (-) " << endl;
+                        cin.clear();
+                    }
+                    else {
+                        break;
+                    }
                 }
+                current->Data.record_book = recordbook;
+                from_dynamic_spis_to_file(&file, &list.tail, &current->Data.numbers_of_semester);
+                cout << "Данные успешно изменены" << endl;
                 current = list.tail;
                 list.free_memory();
-
+                break;
             }
-                  break;
+            case 8: {
+                unsigned short int semestr_number;
+                string name;
+                unsigned short mark;
+                bool flag = true;
+                int j = 0;
+                while (true) {
+                    cout << "введите номер семестра, предмет которого вы хотите изменить:";
+                    error_numbers(&semestr_number);
+                    if (semestr_number > current->Data.numbers_of_semester or semestr_number <= 0) {
+                        cout << "у студента " << current->Data.name << " нет такого количества семестров. Допустимое количество семестров: " << current->Data.numbers_of_semester << endl;
+                    }
+                    else { break; }
+                }
+
+                while (flag == true) {
+                    cout << "данные о предметах в семестре номер " << semestr_number << ":" << endl;
+                    for (int j = 0; j < current->Data.massive_of_semestersandsubjects[semestr_number - 1]; j++) {
+                        cout << "предмет: " << current->Data.semester[semestr_number - 1].subject[j].name << " оценка: ";
+                        cout << current->Data.semester[semestr_number - 1].subject[j].mark << endl;
+                    }
+                    cout << "введите название предмета, данные которого вы хотите изменить" << endl;
+                    cout << endl << "введите название предмета:  ";
+                    while (true) {
+                        getline(cin,name);
+                        if (size(name) != 0) {
+                            if (size(name) > 30) {
+                                cout << endl << "слишком длинное название, допустимая длина - 30 символов" << endl;
+                                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                                name.clear();
+                            }
+                            else if (do_not_enter_numbers(&name) or do_not_enter_special_symbols(&name)) {
+                                if (do_not_enter_numbers(&name)) {
+                                    cout << "поле не принимает цифры " << endl;
+                                    cin.clear();
+                                }
+                                else {
+                                    cout << "поле не принимает специальные символы кроме (-) " << endl;
+                                    cin.clear();
+                                }
+                            }
+                            else {
+                                break;
+                            }
+                        }
+                    }
+                    
+                    for ( j = 0; j < current->Data.massive_of_semestersandsubjects[semestr_number - 1]; j++) {
+                        if (name == current->Data.semester[semestr_number - 1].subject[j].name) { fl = false; break; }
+                        else { cout << "введенного вами предмета нет" << endl; }
+                    }
+                    if (fl == false) {break; }
+                    cout << "введите новые дынные о предмете"<< endl;
+                    cout << endl << "введите название предмета:  ";
+                    while (true) {
+                        getline(cin, name);
+                        if (size(name) != 0) {
+                            if (size(name) > 30) {
+                                cout << endl << "слишком длинное название, допустимая длина - 30 символов" << endl;
+                                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                                name.clear();
+                            }
+                            else if (do_not_enter_numbers(&name) or do_not_enter_special_symbols(&name)) {
+                                if (do_not_enter_numbers(&name)) {
+                                    cout << "поле не принимает цифры " << endl;
+                                    cin.clear();
+                                }
+                                else {
+                                    cout << "поле не принимает специальные символы кроме (-) " << endl;
+                                    cin.clear();
+                                }
+                            }
+                            else {
+                                break;
+                            }
+                        }
+                    }
+                    cout << endl << "введите оценку за предмет(цифрой, зачет-1, незачет-0):  ";
+                    while (true) {
+                        cin >> mark;
+                        if (cin.fail()) {
+                            cout << endl << "ошибка ввода, введите число" << endl;
+                            cin.clear();
+                            mark = '\0';
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        }
+                        else if (mark > 5 or mark < 0) {
+                            cout << endl << "ошибка, оценка может принимать значения от 0 до 5" << endl;
+
+                            cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            mark = '\0';
+                        }
+                        else {
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            break;
+                        }
+                    }
+                    current->Data.semester[semestr_number - 1].subject[j].name = name;
+                    current->Data.semester[semestr_number - 1].subject[j].mark = mark;
+                    from_dynamic_spis_to_file(&file, &list.tail, &current->Data.numbers_of_semester);
+                    cout << "Данные успешно изменены" << endl;
+                    current = list.tail;
+                    list.free_memory();
+                }
+                break;
+                
+            }
             default: {
                 cout << "такой команды нет" << endl;
                 struct list* current = list.tail;
                 list.free_memory();
                 break;
             }
-
 
             }
             break;
@@ -1110,7 +1251,8 @@ int main() {
             class dynamic_list list;
 
             file.open("students.bin", fstream::in | fstream::binary);
-            if (file.is_open()) {
+            if (file.peek() == EOF) { cout << "в файле нет записей" << endl; break; }
+            else if (file.is_open()) {
                 string b;
                 list.create_dynamic_spis(&file, &stud, b);
             }
@@ -1154,11 +1296,9 @@ int main() {
             class dynamic_list list;
             fstream file;
             dynamic_list list1;
-            struct list* buffer;
-            
-
             file.open("students.bin", fstream::in | fstream::binary);
-            if (file.is_open()) {
+            if (file.peek() == EOF) { cout << "в файле нет записей" << endl; break; }
+            else if (file.is_open()) {
                 string b;
                 list.create_dynamic_spis(&file, &stud, b);
             }
@@ -1174,7 +1314,16 @@ int main() {
             list.free_memory();
             break;
         }
-
+           
+        case 6: {
+            Crypt();  
+            break;
+            
+        }
+        case 7:{
+            Decrypt();
+            break;
+        }
         default:       
             cout << "такой команды нет" << endl;
             break;
