@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="student">
+    <Position X="1" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAEQAAAAAAAAAEAAABQAACAQAAAkAAAIAAAAAAAAIgA=</HashCode>
+      <FileName>курсач.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="dynamic_list">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAgAIAAAEAABAAAAAAAAEAAAAIAAAAAAAAAiA=</HashCode>
+      <FileName>курсач.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Date">
+    <Position X="5.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAkAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>курсач.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="subject">
+    <Position X="7" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>курсач.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Semester">
+    <Position X="7" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>курсач.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="struct_student">
+    <Position X="2.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAABQAACAQAAAkAAAIAAAAAAAAIgA=</HashCode>
+      <FileName>курсач.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="list">
+    <Position X="5.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAAAAABAAAAAAAAIAAAA=</HashCode>
+      <FileName>курсач.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

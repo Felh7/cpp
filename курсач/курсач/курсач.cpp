@@ -2,7 +2,7 @@
 #include "string"
 #include <cstdlib>
 #include<fstream>
-#include <limits> // для numeric limits
+#include <limits>
 #include<windows.h>
 #include <time.h>
 #undef max
@@ -40,10 +40,6 @@ struct list {
     struct list* next;
     struct list* previous;
 };
-
-struct list* head;
-struct list* tail;
-
 
 void error_numbers(unsigned short int* n) {
     while (true) {
@@ -124,6 +120,7 @@ void toomanysymbols(string* str, unsigned short int n) {
 
 void menu() {
 
+    cout << "введите 0, чтобы закрыть программу" << endl;
     cout << "введите 1 для записи данных студента в файл" << endl;
     cout << "введите 2 для удаления данных студента в файле" << endl;
     cout << "введите 3 для изменения данных студента в файле" << endl;
@@ -236,8 +233,7 @@ void get_from_file(fstream* file, struct_student* stud, string b, unsigned short
     }
    
     file->get();
-    unsigned short int c;
-    c = file->get();
+    file->get();
     file->get();
     unsigned short int i = 0;
     unsigned short int j = 0;
@@ -394,14 +390,7 @@ void from_dynamic_spis_to_file(fstream *file, struct list** tail, unsigned short
     }
     file->close();
 }
-void warning(unsigned short int *n, unsigned short int * chose, struct list* current) {
-    cout << endl;
-    for (int i = 0; i < *n - 1; i++) {
-        current = current->previous;
-    }
-    cout << "вы хотите изменить данные студента " <<current->Data.name << endl << "введите  0, чтобы отменить и любое число чтобы продолжить " << endl;
-    error_numbers(chose);
-}
+
 class student {
 private:
     string name;
@@ -412,12 +401,8 @@ private:
     string group;
     string record_book;
     string sex;
-
     Semester semester[10];
-    
 
-    string strbuf;
-    unsigned short int intbuf;
 public:
     unsigned short int numbers_of_semester;
     unsigned short int massive_of_semestersandsubjects[9];
@@ -456,7 +441,7 @@ public:
         cout << endl << "введите дату поступления студента" << endl;
         enter_date(&this->admission_date);
         while (true) {
-            cout << endl << "введите институт студента" << endl;
+            cout << endl << "введите институт студента (используйте аббревиатуру, например ИКБ)" << endl;
             toomanysymbols(&this->institut, 5);
             if (do_not_enter_numbers(&this->institut)) { cout << "поле не принимает цифры " << endl; cin.clear(); }
             else if (do_not_enter_special_symbols(&this->institut)) {
@@ -468,7 +453,7 @@ public:
             }
         }
         while (true) {
-            cout << endl << "введите кафедру студента" << endl;
+            cout << endl << "введите кафедру студента, например кб-8" << endl;
             toomanysymbols(&this->department, 5);
             if (do_not_enter_special_symbols(&this->department)) {
                 cout << "поле не принимает специальные символы кроме (-) " << endl;
@@ -479,7 +464,7 @@ public:
             }
         }
         while (true) {
-            cout << endl << "введите группу студента" << endl;
+            cout << endl << "введите группу студента, например бббо-01-22" << endl;
             toomanysymbols(&this->group, 10);
             if (do_not_enter_special_symbols(&this->group)) {
                 cout << "поле не принимает специальные символы кроме (-) " << endl;
@@ -500,7 +485,7 @@ public:
                 break;
             }
         }
-        cout << endl << "введите пол студента" << endl;
+        cout << endl << "введите пол студента (м или ж)" << endl;
         while (true) {
             toomanysymbols(&this->sex, 1);
             if (this->sex != "м" and this->sex != "ж") {
@@ -513,10 +498,14 @@ public:
         while (true) {
             error_numbers(&numbers_of_semester);
 <<<<<<< HEAD
+<<<<<<< HEAD
             if (numbers_of_semester > 10) { cout << "максимальное количсетво семестров-10"; }
 =======
             if (numbers_of_semester > 10) { cout << "максимальное количсетво семестров-10" << endl; }
 >>>>>>> баг фикс 3 кейса
+=======
+            if (numbers_of_semester > 10 or numbers_of_semester<1) { cout << "количсетво семестров принимает значения в диапазоне от 1 до 10" << endl; }
+>>>>>>> готовая версия
             else { break; }
         }
         cout << endl << "введите предметы и оценки студента" << endl;
@@ -525,10 +514,14 @@ public:
             while (true) {
                 error_numbers(&massive_of_semestersandsubjects[i]);
 <<<<<<< HEAD
+<<<<<<< HEAD
                 if (massive_of_semestersandsubjects[i] > 9) { cout << "максимальное количсетво семестров-9";  }
 =======
                 if (massive_of_semestersandsubjects[i] > 9) { cout << "максимальное количсетво семестров-9" << endl;  }
 >>>>>>> баг фикс 3 кейса
+=======
+                if (massive_of_semestersandsubjects[i] > 9 or massive_of_semestersandsubjects[i]<1) { cout << "количсетво предметов принимает значения в диапазоне от 1 до 9" << endl;  }
+>>>>>>> готовая версия
                 else { break; }
             }
             cout << "введите результаты " << i + 1 << " семестра" << endl;
@@ -537,8 +530,8 @@ public:
                 while (true) {
                     getline(cin, this->semester[i].subject[j].name);
                     if (size(this->semester[i].subject[j].name) != 0) {
-                        if (size(this->semester[i].subject[j].name) > 30) {
-                            cout << endl << "слишком длинное название, допустимая длина - 30 символов" << endl;
+                        if (size(this->semester[i].subject[j].name) > 22) {
+                            cout << endl << "слишком длинное название, допустимая длина - 22 символа" << endl;
                             cin.ignore(numeric_limits<streamsize>::max(), '\n');
                             this->semester[i].subject[j].name.clear();
                         }
@@ -606,14 +599,14 @@ public:
     }
 };
 class dynamic_list {
-public:
-    struct list* tail;
-    struct list* head;
+private:  
     unsigned short int numbers_of_semester;
-    unsigned short int massive_of_semestersandsubjects[10];
+    unsigned short int massive_of_semestersandsubjects[9];
+    struct list* head = NULL;
+public:
+    struct list* tail=NULL;
     unsigned short int count_of_dynamic_items =0;
 
-    dynamic_list() { count_of_dynamic_items = 0; tail = NULL; head = NULL; }
     void dynamic_add(struct_student Data) {
 
         struct list* newitem = new list();
@@ -712,7 +705,6 @@ public:
             else { break; }
         }
     }
-
     void create_dynamic_spis(fstream* file, struct struct_student* stud, string b) {
         while (true) {
 
@@ -746,13 +738,12 @@ public:
             else { file->seekg(-1, fstream::cur); }
         }
     }
-
-
+  
 };
 
 void Crypt() {
     srand(time(NULL));
-    char* pass = new char[64];
+    char* pass = new char[65];
     for (int i = 0; i < 64; ++i) {
         switch (rand() % 3) {
         case 0:
@@ -767,6 +758,7 @@ void Crypt() {
         }
     }
     pass[64] = '\0';
+<<<<<<< HEAD
     string command = "openssl\\bin\\openssl.exe enc -aes-256-cbc -salt -in students.bin -out students.bin.enc -pass pass:";
     command += pass;
     system(command.c_str());
@@ -788,8 +780,31 @@ void Crypt() {
         cout << "[ERROR] - deleting file failed" << endl;
     }
     else { cout << endl<< "данные успешно зашифрованы" << endl; }
+=======
+    ifstream file;
+    file.open("students.bin");
+    if (file.is_open()) {
+        file.close();
+        string command = "openssl\\bin\\openssl.exe enc -aes-256-cbc -salt -in students.bin -out students.bin.enc -pass pass:";
+        command += pass;
+        system(command.c_str());
+        if (remove("students.bin") != 0) {
+            cout << "[ERROR] - deleting file failed" << endl;
+        }
+        ofstream file;
+        file.open("key.txt", ios::binary);
+        file.write(pass, 64);
+        file.close();
+>>>>>>> готовая версия
 
-    
+        command = "openssl\\bin\\openssl.exe rsautl -encrypt -inkey rsa.public -pubin -in key.txt -out key.txt.enc";
+        system(command.c_str());
+        if (remove("key.txt") != 0) {
+            cout << "[ERROR] - deleting file failed" << endl;
+        }
+        else { cout << endl << "данные успешно зашифрованы" << endl; }
+    }
+    else { cout << "файл не существует либо он зашифрован, попробуйте дешифровать файл" << endl; file.close(); }
 }
 
 void Decrypt() {
@@ -798,7 +813,6 @@ void Decrypt() {
     if (remove("key.txt.enc") != 0) {
         cout << "[ERROR] - deleting file failed" << endl;
     }
-
     char* pass = new char[64];
     ifstream file;
     file.open("key.txt", ios::binary);
@@ -806,8 +820,7 @@ void Decrypt() {
     file.close();
     if (remove("key.txt") != 0) {
         cout << "[ERROR] - deleting file failed" << endl;
-    }
-    
+    }  
     command = "openssl\\bin\\openssl.exe enc -aes-256-cbc -d -in students.bin.enc -out students.bin -pass pass:";
     command += pass;
     system(command.c_str());
@@ -815,22 +828,20 @@ void Decrypt() {
         cout << "[ERROR] - deleting file failed" << endl;
     }
     else { cout << endl << "данные успешно расшифрованы"<<endl; }
-    
-
 }
 int main() {
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
     unsigned short int number;
     unsigned short int kill_app;
-
-    while (true) {
+    bool f = true;
+    while (f == true) {
         menu();
         error_numbers(&number);
 
         switch (number) {
            
-        case 0: break;
+        case 0: f = false; break;
 
         case 1:
         {
@@ -959,9 +970,9 @@ int main() {
 >>>>>>> баг фикс 3 кейса
             cout << "8-изменить данные предмета выбранного семестра" << endl;
             unsigned short int v;
-            error_numbers(&v);
             struct list* current = list.tail;
             bool fl = true;
+<<<<<<< HEAD
             while (true) {
                 if (current->Data.record_book == number_of_record_book) {
 <<<<<<< HEAD
@@ -971,16 +982,31 @@ int main() {
 >>>>>>> баг фикс 3 кейса
                     error_numbers(&chose);
                     break;
+=======
+            error_numbers(&v);
+            if (v != 0) {
+                while (true) {
+                    if (current->Data.record_book == number_of_record_book) {
+                        cout << "вы хотите изменть данные студента " << current->Data.name << endl << "введите  0, чтобы отменить и любое число чтобы продолжить " << endl;
+                        error_numbers(&chose);
+                        break;
+                    }
+                    else { current = current->previous; }
+                    if (current == NULL) { cout << "студента с введенным номером зачетной книжки нет" << endl; fl = false;  break; }
+>>>>>>> готовая версия
                 }
-                else { current = current->previous; }
-                if (current == NULL) { cout << "студента с введенным номером зачетной книжки нет" << endl; fl = false;  break; }
+                if (fl == false or chose == 0) { v = 0; }
             }
+<<<<<<< HEAD
 <<<<<<< HEAD
             if (fl ==false) { v = 0; }
 =======
             if (fl ==false or chose == 0) { v = 0; }
 >>>>>>> баг фикс 3 кейса
 
+=======
+            else {}
+>>>>>>> готовая версия
             switch (v) {
             case 0: {
                 struct list* current;
@@ -1290,8 +1316,8 @@ int main() {
                     while (true) {
                         getline(cin,name);
                         if (size(name) != 0) {
-                            if (size(name) > 30) {
-                                cout << endl << "слишком длинное название, допустимая длина - 30 символов" << endl;
+                            if (size(name) > 22) {
+                                cout << endl << "слишком длинное название, допустимая длина - 22 символа" << endl;
                                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                                 name.clear();
                             }
@@ -1469,11 +1495,14 @@ int main() {
             cout << "такой команды нет" << endl;
             break;
         }
-        cout << endl <<"введие 0 чтобы закрыть программу или любое число чтобы продолжить" << endl;
-        error_numbers(&kill_app);
-        if (kill_app == 0) {
-            break;
+        if (f != false) {
+            cout << endl << "введие 0 чтобы закрыть программу или любое число чтобы продолжить" << endl;
+            error_numbers(&kill_app);
+            if (kill_app == 0) {
+                f = false;  break;
+            }
         }
+        system("cls");
     }
 }
 

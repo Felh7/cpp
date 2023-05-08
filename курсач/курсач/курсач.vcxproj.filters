@@ -23,5 +23,6 @@
     <None Include="курсач.bin">
       <Filter>Файлы ресурсов</Filter>
     </None>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>
